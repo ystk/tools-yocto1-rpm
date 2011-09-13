@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rpm-4.2\n"
 "Report-Msgid-Bugs-To: <rpm-devel@rpm5.org>\n"
-"POT-Creation-Date: 2011-06-02 18:05+0000\n"
+"POT-Creation-Date: 2011-09-05 08:56-0400\n"
 "PO-Revision-Date: 2004-09-20 16:01+0530\n"
 "Last-Translator: Amanpreet Singh Alam <aalam@redhat.com>\n"
 "Language-Team: Punjabi <fedora-trans-pa@redhat.com>\n"
@@ -2534,11 +2534,11 @@ msgstr ""
 msgid "OK"
 msgstr "ਠੀਕ ਹੈ"
 
-#: lib/rpmds.c:900 lib/rpmds.c:4102
+#: lib/rpmds.c:900 lib/rpmds.c:4103
 msgid "NO "
 msgstr "ਨਹੀਂ"
 
-#: lib/rpmds.c:900 lib/rpmds.c:4102
+#: lib/rpmds.c:900 lib/rpmds.c:4103
 msgid "YES"
 msgstr "ਹਾਂ"
 
@@ -2969,22 +2969,22 @@ msgstr ""
 msgid "incorrect solve path format: %s\n"
 msgstr ""
 
-#: lib/transaction.c:1449
+#: lib/transaction.c:1472
 #, c-format
 msgid "Unable to change root directory: %m\n"
 msgstr ""
 
-#: lib/transaction.c:1946
+#: lib/transaction.c:1969
 #, c-format
 msgid "rpmdb erase failed. NEVRA: %s\n"
 msgstr ""
 
-#: lib/transaction.c:1964
+#: lib/transaction.c:1987
 #, c-format
 msgid "Rollback to %-24.24s (0x%08x)\n"
 msgstr ""
 
-#: lib/transaction.c:2042
+#: lib/transaction.c:2065
 msgid "Invalid number of transaction elements.\n"
 msgstr ""
 
@@ -3070,7 +3070,7 @@ msgid "invalid type"
 msgstr ""
 
 #: rpmdb/hdrfmt.c:658 rpmdb/hdrfmt.c:689 rpmdb/hdrfmt.c:712 rpmdb/hdrfmt.c:780
-#: rpmdb/hdrfmt.c:1466 rpmdb/hdrfmt.c:1518
+#: rpmdb/hdrfmt.c:1467 rpmdb/hdrfmt.c:1519
 msgid "(invalid type)"
 msgstr ""
 
@@ -3082,8 +3082,8 @@ msgstr ""
 msgid "(invalid type :base64)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:966 rpmdb/hdrfmt.c:997 rpmdb/hdrfmt.c:3447
-#: rpmdb/hdrfmt.c:4280
+#: rpmdb/hdrfmt.c:966 rpmdb/hdrfmt.c:997 rpmdb/hdrfmt.c:3448
+#: rpmdb/hdrfmt.c:4281
 msgid "(not a string)"
 msgstr ""
 
@@ -3091,135 +3091,135 @@ msgstr ""
 msgid "(invalid xml type)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:1200
+#: rpmdb/hdrfmt.c:1201
 msgid "(invalid yaml type)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:1306
+#: rpmdb/hdrfmt.c:1307
 msgid "(invalid json type)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:1360
+#: rpmdb/hdrfmt.c:1361
 msgid "(not a blob)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:1383
+#: rpmdb/hdrfmt.c:1384
 msgid "(not an OpenPGP signature)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4492
+#: rpmdb/hdrfmt.c:4493
 msgid "(invalid type :digest)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4551
+#: rpmdb/hdrfmt.c:4552
 msgid "(invalid type :stat)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4725
+#: rpmdb/hdrfmt.c:4726
 msgid "(invalid type :uuid)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4733 rpmdb/hdrfmt.c:4766
+#: rpmdb/hdrfmt.c:4734 rpmdb/hdrfmt.c:4767
 msgid "(invalid tag :uuid)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4832
+#: rpmdb/hdrfmt.c:4833
 msgid "(invalid type :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4844
+#: rpmdb/hdrfmt.c:4845
 msgid "(invalid string :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4860
+#: rpmdb/hdrfmt.c:4861
 msgid "(expected number :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4864
+#: rpmdb/hdrfmt.c:4865
 msgid "(stack overflow :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4870
+#: rpmdb/hdrfmt.c:4871
 msgid "(invalid number :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4875
+#: rpmdb/hdrfmt.c:4876
 msgid "(stack underflow :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4888
+#: rpmdb/hdrfmt.c:4889
 msgid "(divide by zero :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4931
+#: rpmdb/hdrfmt.c:4932
 msgid "(invalid type :strsub)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4936
+#: rpmdb/hdrfmt.c:4937
 msgid "(invalid args :strsub)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5796
+#: rpmdb/hdrfmt.c:5797
 msgid "missing { after %"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5830
+#: rpmdb/hdrfmt.c:5831
 msgid "missing } after %{"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5846
+#: rpmdb/hdrfmt.c:5847
 msgid "empty tag format"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5866
+#: rpmdb/hdrfmt.c:5867
 msgid "malformed parameter list"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5887
+#: rpmdb/hdrfmt.c:5888
 msgid "empty tag name"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5896
+#: rpmdb/hdrfmt.c:5897
 msgid "unknown tag"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5926
+#: rpmdb/hdrfmt.c:5927
 msgid "] expected at end of array"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5943
+#: rpmdb/hdrfmt.c:5944
 msgid "unexpected ]"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5958
+#: rpmdb/hdrfmt.c:5959
 msgid "unexpected }"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:6037
+#: rpmdb/hdrfmt.c:6038
 msgid "? expected in expression"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:6044
+#: rpmdb/hdrfmt.c:6045
 msgid "{ expected after ? in expression"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:6056 rpmdb/hdrfmt.c:6096
+#: rpmdb/hdrfmt.c:6057 rpmdb/hdrfmt.c:6097
 msgid "} expected in expression"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:6064
+#: rpmdb/hdrfmt.c:6065
 msgid ": expected following ? subexpression"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:6082
+#: rpmdb/hdrfmt.c:6083
 msgid "{ expected after : in expression"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:6104
+#: rpmdb/hdrfmt.c:6105
 msgid "| expected at end of expression"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:6438
+#: rpmdb/hdrfmt.c:6439
 msgid "array iterator used with different sized arrays"
 msgstr ""
 

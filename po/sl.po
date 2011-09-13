@@ -1,13 +1,13 @@
 # -*- mode:po; coding:iso-latin-2; -*- Slovenian messages for Redhat pkg. mngr.
 # Copyright (C) 2000 Free Software Foundation, Inc.
 # Primo¾ Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>, 2000.
-# $Id: sl.po,v 1.429.2.8 2011/05/02 14:11:47 mdawkins Exp $
+# $Id: sl.po,v 1.429.2.9 2011/09/05 12:35:30 jbj Exp $
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: rpm 4.0.3\n"
 "Report-Msgid-Bugs-To: <rpm-devel@rpm5.org>\n"
-"POT-Creation-Date: 2011-06-02 18:05+0000\n"
+"POT-Creation-Date: 2011-09-05 08:56-0400\n"
 "PO-Revision-Date: 2000-10-08 19:05+0200\n"
 "Last-Translator: Grega Fajdiga <gregor.fajdiga@telemach.net>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -2683,12 +2683,12 @@ msgstr ")"
 msgid "OK"
 msgstr "V REDU"
 
-#: lib/rpmds.c:900 lib/rpmds.c:4102
+#: lib/rpmds.c:900 lib/rpmds.c:4103
 #, fuzzy
 msgid "NO "
 msgstr "NI DOBRO"
 
-#: lib/rpmds.c:900 lib/rpmds.c:4102
+#: lib/rpmds.c:900 lib/rpmds.c:4103
 msgid "YES"
 msgstr ""
 
@@ -3126,22 +3126,22 @@ msgstr "datoteke %s/packages.rpm ni mogo¾no odpreti\n"
 msgid "incorrect solve path format: %s\n"
 msgstr "napaka v obliki: %s\n"
 
-#: lib/transaction.c:1449
+#: lib/transaction.c:1472
 #, fuzzy, c-format
 msgid "Unable to change root directory: %m\n"
 msgstr "neuspe¹na odstranitev imenika %s: %s\n"
 
-#: lib/transaction.c:1946
+#: lib/transaction.c:1969
 #, fuzzy, c-format
 msgid "rpmdb erase failed. NEVRA: %s\n"
 msgstr "odstranitev imenika %s je bila neuspe¹na: %s"
 
-#: lib/transaction.c:1964
+#: lib/transaction.c:1987
 #, c-format
 msgid "Rollback to %-24.24s (0x%08x)\n"
 msgstr ""
 
-#: lib/transaction.c:2042
+#: lib/transaction.c:2065
 msgid "Invalid number of transaction elements.\n"
 msgstr ""
 
@@ -3229,7 +3229,7 @@ msgid "invalid type"
 msgstr ""
 
 #: rpmdb/hdrfmt.c:658 rpmdb/hdrfmt.c:689 rpmdb/hdrfmt.c:712 rpmdb/hdrfmt.c:780
-#: rpmdb/hdrfmt.c:1466 rpmdb/hdrfmt.c:1518
+#: rpmdb/hdrfmt.c:1467 rpmdb/hdrfmt.c:1519
 msgid "(invalid type)"
 msgstr ""
 
@@ -3243,8 +3243,8 @@ msgstr "(ni ¹tevilo)"
 msgid "(invalid type :base64)"
 msgstr "(ni ¹tevilo)"
 
-#: rpmdb/hdrfmt.c:966 rpmdb/hdrfmt.c:997 rpmdb/hdrfmt.c:3447
-#: rpmdb/hdrfmt.c:4280
+#: rpmdb/hdrfmt.c:966 rpmdb/hdrfmt.c:997 rpmdb/hdrfmt.c:3448
+#: rpmdb/hdrfmt.c:4281
 #, fuzzy
 msgid "(not a string)"
 msgstr "(ni ¹tevilo)"
@@ -3253,140 +3253,140 @@ msgstr "(ni ¹tevilo)"
 msgid "(invalid xml type)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:1200
+#: rpmdb/hdrfmt.c:1201
 msgid "(invalid yaml type)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:1306
+#: rpmdb/hdrfmt.c:1307
 #, fuzzy
 msgid "(invalid json type)"
 msgstr "(neznan tip)"
 
-#: rpmdb/hdrfmt.c:1360
+#: rpmdb/hdrfmt.c:1361
 #, fuzzy
 msgid "(not a blob)"
 msgstr "(ni ¹tevilo)"
 
-#: rpmdb/hdrfmt.c:1383
+#: rpmdb/hdrfmt.c:1384
 #, fuzzy
 msgid "(not an OpenPGP signature)"
 msgstr "preskoèi vse podpise PGP"
 
-#: rpmdb/hdrfmt.c:4492
+#: rpmdb/hdrfmt.c:4493
 msgid "(invalid type :digest)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4551
+#: rpmdb/hdrfmt.c:4552
 msgid "(invalid type :stat)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4725
+#: rpmdb/hdrfmt.c:4726
 msgid "(invalid type :uuid)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4733 rpmdb/hdrfmt.c:4766
+#: rpmdb/hdrfmt.c:4734 rpmdb/hdrfmt.c:4767
 msgid "(invalid tag :uuid)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4832
+#: rpmdb/hdrfmt.c:4833
 msgid "(invalid type :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4844
+#: rpmdb/hdrfmt.c:4845
 msgid "(invalid string :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4860
+#: rpmdb/hdrfmt.c:4861
 #, fuzzy
 msgid "(expected number :rpn)"
 msgstr "neprièakovana oblika poizvedbe"
 
-#: rpmdb/hdrfmt.c:4864
+#: rpmdb/hdrfmt.c:4865
 msgid "(stack overflow :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4870
+#: rpmdb/hdrfmt.c:4871
 #, fuzzy
 msgid "(invalid number :rpn)"
 msgstr "(ni ¹tevilo)"
 
-#: rpmdb/hdrfmt.c:4875
+#: rpmdb/hdrfmt.c:4876
 msgid "(stack underflow :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4888
+#: rpmdb/hdrfmt.c:4889
 msgid "(divide by zero :rpn)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4931
+#: rpmdb/hdrfmt.c:4932
 msgid "(invalid type :strsub)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:4936
+#: rpmdb/hdrfmt.c:4937
 msgid "(invalid args :strsub)"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5796
+#: rpmdb/hdrfmt.c:5797
 msgid "missing { after %"
 msgstr "manjkajoèi { za %"
 
-#: rpmdb/hdrfmt.c:5830
+#: rpmdb/hdrfmt.c:5831
 msgid "missing } after %{"
 msgstr "manjkajoèi } za %{"
 
-#: rpmdb/hdrfmt.c:5846
+#: rpmdb/hdrfmt.c:5847
 msgid "empty tag format"
 msgstr "oblika znaèke manjka"
 
-#: rpmdb/hdrfmt.c:5866
+#: rpmdb/hdrfmt.c:5867
 msgid "malformed parameter list"
 msgstr ""
 
-#: rpmdb/hdrfmt.c:5887
+#: rpmdb/hdrfmt.c:5888
 msgid "empty tag name"
 msgstr "ime znaèke manjka"
 
-#: rpmdb/hdrfmt.c:5896
+#: rpmdb/hdrfmt.c:5897
 msgid "unknown tag"
 msgstr "neznana znaèka"
 
-#: rpmdb/hdrfmt.c:5926
+#: rpmdb/hdrfmt.c:5927
 msgid "] expected at end of array"
 msgstr "na koncu polja je prièakovan ]"
 
-#: rpmdb/hdrfmt.c:5943
+#: rpmdb/hdrfmt.c:5944
 msgid "unexpected ]"
 msgstr "neprièakovan ]"
 
-#: rpmdb/hdrfmt.c:5958
+#: rpmdb/hdrfmt.c:5959
 msgid "unexpected }"
 msgstr "neprièakovan }"
 
-#: rpmdb/hdrfmt.c:6037
+#: rpmdb/hdrfmt.c:6038
 msgid "? expected in expression"
 msgstr "v izrazu je prièakovan ?"
 
-#: rpmdb/hdrfmt.c:6044
+#: rpmdb/hdrfmt.c:6045
 msgid "{ expected after ? in expression"
 msgstr "v izrazu je za { prièakovan ?"
 
-#: rpmdb/hdrfmt.c:6056 rpmdb/hdrfmt.c:6096
+#: rpmdb/hdrfmt.c:6057 rpmdb/hdrfmt.c:6097
 msgid "} expected in expression"
 msgstr "v izrazu je prièakovan }"
 
-#: rpmdb/hdrfmt.c:6064
+#: rpmdb/hdrfmt.c:6065
 msgid ": expected following ? subexpression"
 msgstr "za podizrazom ? je prièakovano :"
 
-#: rpmdb/hdrfmt.c:6082
+#: rpmdb/hdrfmt.c:6083
 msgid "{ expected after : in expression"
 msgstr "v izrazu je za : prièakovan {"
 
-#: rpmdb/hdrfmt.c:6104
+#: rpmdb/hdrfmt.c:6105
 msgid "| expected at end of expression"
 msgstr "na koncu izraza je prièakovan |"
 
-#: rpmdb/hdrfmt.c:6438
+#: rpmdb/hdrfmt.c:6439
 msgid "array iterator used with different sized arrays"
 msgstr ""
 

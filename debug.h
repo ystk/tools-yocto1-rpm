@@ -39,6 +39,10 @@
 #include <valgrind/helgrind.h>
 #include <valgrind/drd.h>
 
+#if !defined(ANNOTATE_BENIGN_RACE_SIZED)
+#define	ANNOTATE_BENIGN_RACE_SIZED(_a, _b, _c)
+#endif
+
 static inline void * DRD_xmalloc(size_t nb)
 {
     void * ptr = xmalloc(nb);
@@ -64,7 +68,7 @@ ANNOTATE_BENIGN_RACE_SIZED(ptr, size, __FUNCTION__);	/* XXX tsan sanity. */
 static inline char * DRD_xstrdup(const char * s)
 {
     size_t nb = strlen(s) + 1;
-    char * t = DRD_xmalloc(nb);
+    char * t = (char *) DRD_xmalloc(nb);
     return strcpy(t, s);
 }
 

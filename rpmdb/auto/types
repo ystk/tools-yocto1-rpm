@@ -297,14 +297,14 @@
     #include <rpmtag.h>
     #include <lib/rpmts.h>
     static const char _test_rpm[] = 
-        "/wdj54/rpmdb/auto/test_data/"
+        "/X/src/wdj54/rpmdb/auto/test_data/"
         "devtool-sanity-1.0-1.noarch.rpm";
   </global_code>
   <init_code>
     { void * ts = rpmtsCreate();
       FD_t fd = Fopen(_test_rpm, "r");
       if (ts) {
-        static const char _root_dn[] = "/wdj54/rpmdb/auto/";
+        static const char _root_dn[] = "/X/src/wdj54/rpmdb/auto/";
 	(void) rpmtsSetRootDir(ts, _root_dn);
       }
       if (fd && !Ferror(fd)) {
@@ -326,7 +326,7 @@
   <value> NULL </value>
   <global_code>
     #include <fcntl.h>	/* XXX O_RDWR */
-    static const char _root_dn[] = "/wdj54/rpmdb/auto/";
+    static const char _root_dn[] = "/X/src/wdj54/rpmdb/auto/";
   </global_code>
   <init_code>
     /* XXX FIXME: %_dbpath */
@@ -377,7 +377,7 @@
   <global_code>
     static char * _test_av[] = {
 	"rpmrepo",
-        "/wdj54/rpmdb/auto/test_data",
+        "/X/src/wdj54/rpmdb/auto/test_data",
         NULL
     };
   </global_code>

@@ -2,7 +2,7 @@
 # To make use of these macros insert the following line into your spec file:
 # %{load:%{_usrlibrpm}/macros.d/ruby}
 
-%__ruby		%{_bindir}/ruby
+%__ruby		/usr/bin/ruby
 
 # Path to scripts to autogenerate php package dependencies,
 #

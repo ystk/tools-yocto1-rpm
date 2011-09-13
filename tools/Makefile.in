@@ -45,8 +45,9 @@ EXTRA_PROGRAMS = augtool$(EXEEXT) cudftool$(EXEEXT) dbconvert$(EXEEXT) \
 	nix-log2xml$(EXEEXT) nix-prefetch-url$(EXEEXT) \
 	nix-pull$(EXEEXT) nix-push$(EXEEXT) nix-store$(EXEEXT) \
 	nix-worker$(EXEEXT) xiu-echo$(EXEEXT) xiu-hash$(EXEEXT) \
-	xiu-instantiate$(EXEEXT) xiu-store$(EXEEXT) rpmkey$(EXEEXT) \
-	sandbox$(EXEEXT) semodule$(EXEEXT) spooktool$(EXEEXT)
+	xiu-instantiate$(EXEEXT) xiu-store$(EXEEXT) roto$(EXEEXT) \
+	rpmkey$(EXEEXT) sandbox$(EXEEXT) semodule$(EXEEXT) \
+	spooktool$(EXEEXT)
 bin_PROGRAMS = rpm2cpio$(EXEEXT)
 pkgbin_PROGRAMS = @WITH_AUGEAS_AUGTOOL@ chroot$(EXEEXT) cp$(EXEEXT) \
 	@WITH_CUDF_CUDFTOOL@ find$(EXEEXT) mtree$(EXEEXT) \
@@ -276,6 +277,12 @@ nix_worker_DEPENDENCIES = /usr/lib/nix/libATerm.a
 nix_worker_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(nix_worker_LDFLAGS) $(LDFLAGS) -o $@
+am_roto_OBJECTS = roto.$(OBJEXT)
+roto_OBJECTS = $(am_roto_OBJECTS)
+roto_DEPENDENCIES = $(am__DEPENDENCIES_3)
+roto_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(roto_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am_rpm2cpio_OBJECTS = rpm2cpio.$(OBJEXT)
 rpm2cpio_OBJECTS = $(am_rpm2cpio_OBJECTS)
 am__DEPENDENCIES_5 =
@@ -395,12 +402,12 @@ SOURCES = $(augtool_SOURCES) $(chroot_SOURCES) $(cp_SOURCES) \
 	$(nix_install_package_SOURCES) $(nix_instantiate_SOURCES) \
 	$(nix_log2xml_SOURCES) $(nix_prefetch_url_SOURCES) \
 	$(nix_pull_SOURCES) $(nix_push_SOURCES) $(nix_store_SOURCES) \
-	$(nix_worker_SOURCES) $(rpm2cpio_SOURCES) $(rpmcache_SOURCES) \
-	$(rpmcmp_SOURCES) $(rpmdeps_SOURCES) $(rpmdigest_SOURCES) \
-	$(rpmkey_SOURCES) $(rpmrepo_SOURCES) $(rpmspecdump_SOURCES) \
-	$(sandbox_SOURCES) $(semodule_SOURCES) $(spooktool_SOURCES) \
-	$(sqlite3_SOURCES) $(txar_SOURCES) $(wget_SOURCES) \
-	$(xiu_echo_SOURCES) $(xiu_hash_SOURCES) \
+	$(nix_worker_SOURCES) $(roto_SOURCES) $(rpm2cpio_SOURCES) \
+	$(rpmcache_SOURCES) $(rpmcmp_SOURCES) $(rpmdeps_SOURCES) \
+	$(rpmdigest_SOURCES) $(rpmkey_SOURCES) $(rpmrepo_SOURCES) \
+	$(rpmspecdump_SOURCES) $(sandbox_SOURCES) $(semodule_SOURCES) \
+	$(spooktool_SOURCES) $(sqlite3_SOURCES) $(txar_SOURCES) \
+	$(wget_SOURCES) $(xiu_echo_SOURCES) $(xiu_hash_SOURCES) \
 	$(xiu_instantiate_SOURCES) $(xiu_store_SOURCES)
 DIST_SOURCES = $(augtool_SOURCES) $(chroot_SOURCES) $(cp_SOURCES) \
 	$(cudftool_SOURCES) $(dbconvert_SOURCES) \
@@ -412,13 +419,13 @@ DIST_SOURCES = $(augtool_SOURCES) $(chroot_SOURCES) $(cp_SOURCES) \
 	$(nix_instantiate_SOURCES) $(nix_log2xml_SOURCES) \
 	$(nix_prefetch_url_SOURCES) $(nix_pull_SOURCES) \
 	$(nix_push_SOURCES) $(nix_store_SOURCES) $(nix_worker_SOURCES) \
-	$(rpm2cpio_SOURCES) $(rpmcache_SOURCES) $(rpmcmp_SOURCES) \
-	$(rpmdeps_SOURCES) $(rpmdigest_SOURCES) $(rpmkey_SOURCES) \
-	$(rpmrepo_SOURCES) $(rpmspecdump_SOURCES) $(sandbox_SOURCES) \
-	$(semodule_SOURCES) $(spooktool_SOURCES) $(sqlite3_SOURCES) \
-	$(am__txar_SOURCES_DIST) $(wget_SOURCES) $(xiu_echo_SOURCES) \
-	$(xiu_hash_SOURCES) $(xiu_instantiate_SOURCES) \
-	$(xiu_store_SOURCES)
+	$(roto_SOURCES) $(rpm2cpio_SOURCES) $(rpmcache_SOURCES) \
+	$(rpmcmp_SOURCES) $(rpmdeps_SOURCES) $(rpmdigest_SOURCES) \
+	$(rpmkey_SOURCES) $(rpmrepo_SOURCES) $(rpmspecdump_SOURCES) \
+	$(sandbox_SOURCES) $(semodule_SOURCES) $(spooktool_SOURCES) \
+	$(sqlite3_SOURCES) $(am__txar_SOURCES_DIST) $(wget_SOURCES) \
+	$(xiu_echo_SOURCES) $(xiu_hash_SOURCES) \
+	$(xiu_instantiate_SOURCES) $(xiu_store_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -537,6 +544,7 @@ INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LDFLAGS_STATIC = @LDFLAGS_STATIC@
+LD_VERSION_SCRIPT_FLAG = @LD_VERSION_SCRIPT_FLAG@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
@@ -1013,6 +1021,9 @@ nix_worker_LDADD = -L/usr/lib/nix -lmain -lexpr -lstore -lutil -lformat \
         /usr/lib/nix/libATerm.a
 
 nix_worker_LDFLAGS = -Wl,-rpath -Wl,/usr/lib/nix
+roto_SOURCES = roto.c
+roto_LDFLAGS = @LDFLAGS_STATIC@ $(LDFLAGS)
+roto_LDADD = $(RPMDB_LDADD_COMMON)
 rpmcache_SOURCES = rpmcache.c
 rpmcache_LDFLAGS = @LDFLAGS_STATIC@ $(LDFLAGS)
 rpmcache_LDADD = $(RPM_LDADD_COMMON)
@@ -1267,6 +1278,9 @@ nix-store$(EXEEXT): $(nix_store_OBJECTS) $(nix_store_DEPENDENCIES)
 nix-worker$(EXEEXT): $(nix_worker_OBJECTS) $(nix_worker_DEPENDENCIES) 
 	@rm -f nix-worker$(EXEEXT)
 	$(nix_worker_LINK) $(nix_worker_OBJECTS) $(nix_worker_LDADD) $(LIBS)
+roto$(EXEEXT): $(roto_OBJECTS) $(roto_DEPENDENCIES) 
+	@rm -f roto$(EXEEXT)
+	$(roto_LINK) $(roto_OBJECTS) $(roto_LDADD) $(LIBS)
 rpm2cpio$(EXEEXT): $(rpm2cpio_OBJECTS) $(rpm2cpio_DEPENDENCIES) 
 	@rm -f rpm2cpio$(EXEEXT)
 	$(rpm2cpio_LINK) $(rpm2cpio_OBJECTS) $(rpm2cpio_LDADD) $(LIBS)
@@ -1352,6 +1366,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nix-store.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nix-worker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/profiles.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/roto.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpm2cpio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpmcache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rpmcmp.Po@am__quote@

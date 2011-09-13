@@ -1,3 +1,36 @@
+5.4.1 -> 5.4.2
+    - jbj: i18n: update PO files (Translation Project).
+    - jbj: fix: ensure that integer CDATA is initialized to "" when missing.
+    - jbj: fix: subdir is needed to find loader maps.
+    - jbj: include Pascal's pom2spec java -> *.rpm wrapper from
+	https://gitorious.org/pbleser/pbleser/blobs/raw/master/pom2spec)
+    - proyvind: add sparc64v2 arch to %sparcx.
+    - proyvind: try sanitize %sparc vs %sparcx inconsistencies, make %sparc
+	all 32 bit sparc archs only, with %sparcx being all 32 bit archs AND
+	64 bit archs.
+    - proyvind: add armv7l to %arm (from Paulo Andrade <pcpa@mandriva.com.br>).
+    - proyvind: fix rpm not comparing distepoch if missing from one package
+	when doing comparision.
+    - proyvind: fix rpm treating packages of same NVRA, but different distepoch
+	as equal, preventing upgrades between them.
+    - proyvind: dbconvert: fix segfault when no root is specified.
+    - devzero2000: merge afb patch portability of endian
+    - proyvind: check-multiarch-files: remove unnecessary import of MDK::Common,
+	causing undesired dependency from perl dependency generator.
+    - devzero2000: add a simple usage command to devtool
+    - devzero2000: merge the popt autofu vendor-script linker script check for openindiana native
+      ld, using modern and not deprecated autoconf construct. Even if the check is not perfect 
+      but it is based on a resultant ld warning, on openindiana the result should work
+      with gcc and native ld also for rpm.  
+    - proyvind: fix broken %optflags for i686-linux macros.
+    - proyvind: mandriva: fix implicit %clean not being run when %changelog is
+	present.
+    - proyvind: don't pick up python version from python egg, rely on path
+	only in stead to avoid incorrect version dependencies if any other
+	egg metadata for other versions is found.
+    - mdawkins: updated changelog in rpm.spec.in
+    - mdawkins: tagged 5.4.2 release in configure.ac
+
 5.4.0 -> 5.4.1:
     - devzero2000: In fpLookupSubdir, data returned by hash should be of type
       "struct rpmffi_s **" instead of "struct rpmffi_s *" to avoid

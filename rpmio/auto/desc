@@ -1,5 +1,5 @@
 <version>
-  5.4.1
+  5.4.2
 </version>
  
 <headers>
@@ -108,18 +108,18 @@
 </headers>
  
 <libs>
-  /wdj54/rpmio/.libs/librpmio.so
+  /X/src/wdj54/rpmio/.libs/librpmio.so
 </libs>
 
 <include_paths>
-  /wdj54/rpmio
+  /X/src/wdj54/rpmio
 </include_paths>
 
 <add_include_paths>
 </add_include_paths>
 
 <gcc_options>
-  -O2 -g -frecord-gcc-switches -Wstrict-aliasing=2 -pipe -Wformat -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fPIC -DPIC -Wall -W -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wno-char-subscripts -Wno-unused-parameter -Wformat-security -g3 -fno-delete-null-pointer-checks -D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions -fexceptions -Wno-missing-field-initializers -D_GNU_SOURCE -D_REENTRANT                    
+  -g -O2 -fPIC -DPIC -Wall -W -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wno-char-subscripts -Wno-unused-parameter -Wformat-security -g3 -fno-delete-null-pointer-checks -D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions -fexceptions -Wno-missing-field-initializers -D_GNU_SOURCE -D_REENTRANT        
 </gcc_options>
 
 <include_preamble>
@@ -130,7 +130,7 @@
 </include_preamble>
 
 <libs_depend>
-  /wdj54/misc/.libs/librpmmisc.so
+  /X/src/wdj54/misc/.libs/librpmmisc.so
 </libs_depend>
 
 <opaque_types>

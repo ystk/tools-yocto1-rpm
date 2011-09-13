@@ -78,8 +78,8 @@ extern uint32_t rpmlibVendor(void)
 	/*@*/;
 
 /* compile-time information */
-#define RPMLIB_VERSION   RPMLIB_VERSION_ENCODE(5,4,r,1,0,_)
-#define RPMLIB_TIMESTAMP RPMLIB_TIMESTAMP_ENCODE(2010,12,29,0,0)
+#define RPMLIB_VERSION   RPMLIB_VERSION_ENCODE(5,4,r,2,0,_)
+#define RPMLIB_TIMESTAMP RPMLIB_TIMESTAMP_ENCODE(2011,6,2,0,0)
 #define RPMLIB_VENDOR    RPMLIB_VENDOR_ENCODE('R','P','M','5')
 
 /* RPM release version encoding */

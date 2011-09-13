@@ -1,7 +1,7 @@
-%distribution		mandriva Linux
+%distribution		redhat Linux
 %vendor			novell
 %bugurl			http://bugzilla.novell.com
-%disturl		http://software.openmandriva.org
+%disturl		http://software.openredhat.org
 # 
 # Below is the rpm-suse_macros  contained in rpm-4.9.0-122 (Build factory)
 # _suse_install_post is defined in macros.brp in the brp-checks-suse 

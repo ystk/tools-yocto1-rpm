@@ -31,8 +31,8 @@
  * ../rpmdb/fprint.h
  * ../rpmdb/header_internal.h
  * ../rpmdb/legacy.h
- * ../rpmdb/logio.h
  * ../rpmdb/logio_auto.h
+ * ../rpmdb/logio.h
  * ../rpmdb/pkgio.h
  * ../rpmdb/rpmdb.h
  * ../rpmdb/rpmdpkg.h
@@ -47,8 +47,8 @@
  * ../rpmdb/rpmtypes.h
  * ../rpmdb/rpmwf.h
  * ../rpmdb/signature.h
- * ../rpmio/ar.h
  * ../rpmio/argv.h
+ * ../rpmio/ar.h
  * ../rpmio/arirang.h
  * ../rpmio/blake.h
  * ../rpmio/bmw.h
@@ -98,10 +98,10 @@
  * ../rpmio/rpmhash.h
  * ../rpmio/rpmhkp.h
  * ../rpmio/rpmhook.h
- * ../rpmio/rpmio-stub.h
+ * ../rpmio/rpmiob.h
  * ../rpmio/rpmio.h
  * ../rpmio/rpmio_internal.h
- * ../rpmio/rpmiob.h
+ * ../rpmio/rpmio-stub.h
  * ../rpmio/rpmiotypes.h
  * ../rpmio/rpmjs.h
  * ../rpmio/rpmjsio.h

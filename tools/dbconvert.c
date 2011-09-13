@@ -1,26 +1,34 @@
-#include <fcntl.h>
-#include <libintl.h>
-#include <glob.h>
-#include <errno.h>
-#include <stdint.h>
 
-#define _RPMDB_INTERNAL
-#define _RPMTAG_INTERNAL
-#define WITH_DB
+#include "system.h"
+
+#include <poptIO.h>
 
 #include <rpmio.h>
-#include <poptIO.h>
+#include <rpmlog.h>
+#include <rpmmacro.h>
 #include <argv.h>
 
-#include <rpmtag.h>
+#define _RPMTAG_INTERNAL
+#define _RPMDB_INTERNAL
 #include <rpmdb.h>
-#include <rpmmacro.h>
-#include <rpmts.h>
-#include <rpmlog.h>
 
+#include <rpmts.h>
+#include <rpmrc.h>
+
+#include "debug.h"
+
+#ifdef HAVE_SYS_ENDIAN_H
+#include <sys/endian.h>
+#endif
+#ifdef __APPLE__
+#include <libkern/OSByteOrder.h>
+
+#define htobe32(x) OSSwapHostToBigInt32(x)
+#define htole32(x) OSSwapHostToLittleInt32(x)
+#endif /* __APPLE__ */
 #if BYTE_ORDER == LITTLE_ENDIAN
 #define bswap32(x) htobe32(x)
-#elif __BYTE_ORDER == BIG_ENDIAN
+#elif BYTE_ORDER == BIG_ENDIAN
 #define bswap32(x) htole32(x)
 #endif
 
@@ -73,7 +81,7 @@ rpmdb_convert(const char *prefix, int dbtype, int swap, int rebuild) {
   addMacro(NULL, "__dbi_txn", NULL, "create mpool txn thread thread_count=64 nofsync", -1);
 
   /* (ugly) clear any existing locks */
-  fn = rpmGetPath(prefix[0] ? prefix : "", dbpath, "/", "__db.*", NULL);
+  fn = rpmGetPath(prefix && prefix[0] ? prefix : "", dbpath, "/", "__db.*", NULL);
   xx = Glob(fn, 0, NULL, &gl);
   for (i = 0; i < (int)gl.gl_pathc; i++)
     xx = Unlink(gl.gl_pathv[i]);
@@ -81,7 +89,7 @@ rpmdb_convert(const char *prefix, int dbtype, int swap, int rebuild) {
   Globfree(&gl);
 
   tsCur = rpmtsCreate();
-  rpmtsSetRootDir(tsCur, prefix && prefix[0] ? prefix : NULL);
+  rpmtsSetRootDir(tsCur, prefix && prefix && prefix[0] ? prefix : NULL);
   if(!rpmtsOpenDB(tsCur, O_RDONLY)) {
     if(dbtype == 1) {
       addMacro(NULL, "_dbi_tags", NULL, "Packages:Name:Basenames:Group:Requirename:Providename:Conflictname:Triggername:Dirnames:Requireversion:Provideversion:Installtid:Sigmd5:Sha1header:Filedigests:Depends:Pubkeys", -1);
@@ -324,7 +332,7 @@ rpmdb_convert(const char *prefix, int dbtype, int swap, int rebuild) {
 	  fn = _free(fn);
 
 	  /* clear locks */
-	  fn = rpmGetPath(prefix[0] ? prefix : "", dbpath, "/", "__db.*", NULL);
+	  fn = rpmGetPath(prefix && prefix[0] ? prefix : "", dbpath, "/", "__db.*", NULL);
 	  xx = Glob(fn, 0, NULL, &gl);
 	  for (i = 0; i < (int)gl.gl_pathc; i++)
 	    xx = Unlink(gl.gl_pathv[i]);
@@ -368,9 +376,9 @@ static struct poptOption optionsTable[] = {
 	"rpm root path", "path" },
 
  { "btree", 'b', POPT_ARG_VAL,   &dbType, 0,
-	"swap indexes to big endian", NULL },
+	"convert database type to btree", NULL},
  { "hash", 'h', POPT_ARG_VAL,   &dbType, 1,
-	"swap indexes to little endian", NULL },
+	"convert database type to hash", NULL},
 
  { "bigendian", 'B', POPT_ARG_VAL,   &byteOrder, 1,
 	"swap indexes to big endian", NULL },

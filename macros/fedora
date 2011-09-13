@@ -1,7 +1,7 @@
-%distribution		mandriva Linux
-%vendor		        mandriva 
+%distribution		redhat Linux
+%vendor		        redhat 
 %bugurl			http://bugzilla.redhat.com
-%disturl		http://software.openmandriva.org
+%disturl		http://software.openredhat.org
 # 
 # Below are the fedora/redhat macros
 # contained in redhat-rpm-config
@@ -11,7 +11,7 @@
 #==============================================================================
 # ---- per-platform macros.
 #
-%_vendor		mandriva
+%_vendor		redhat
 %_os			linux
 %_target_platform	%{_target_cpu}-%{_vendor}-%{_target_os}%{?_gnu}
 

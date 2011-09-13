@@ -2,7 +2,7 @@
 # To make use of these macros insert the following line into your spec file:
 # %{load:%{_usrlibrpm}/macros.d/php}
 
-%__php		%{_bindir}/php
+%__php		/usr/bin/php
 
 # Path to scripts to autogenerate php package dependencies,
 #

@@ -30,7 +30,7 @@ my @objects = qw(
 );
 
 # teach MakeMaker some Mac OS X LDFLAGS:
-my @LDFLAGS = qw(-Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id -Wl,--enable-new-dtags         -L/usr/lib64/                                 -lpthread -lrt  -lelf $(CCCDLFLAGS) $(CCDLFLAGS) -L$(PERL_ARCHLIB)/CORE -lperl );
+my @LDFLAGS = qw(         -L/usr/lib6464         -lpthread -lrt  -lelf $(CCCDLFLAGS) $(CCDLFLAGS) -L$(PERL_ARCHLIB)/CORE -lperl );
 my $uname = `uname`; chomp($uname);
 foreach (@LDFLAGS) {
     if ("$uname" eq "Darwin" && m/^(-arch|ppc|i386|ppc64|x86_64)$/) {
@@ -62,14 +62,14 @@ sub xs_o {
 WriteMakefile(
 	      'NAME'	=> 'RPM',
 	      'OBJECT'	=> join(' ', @objects),
-	      'VERSION' => '5.4.1',
+	      'VERSION' => '5.4.2',
 	      'MAKEFILE'=> 'Makefile.perl',
-	      'CCFLAGS' => join(' ', '-O2 -g -frecord-gcc-switches -Wstrict-aliasing=2 -pipe -Wformat -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fPIC -DPIC -Wall -W -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wno-char-subscripts -Wno-unused-parameter -Wformat-security -g3 -fno-delete-null-pointer-checks -D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions -fexceptions -Wno-missing-field-initializers -D_GNU_SOURCE -D_REENTRANT                    ', '-Wno-unused-variable', '-Wno-missing-prototypes', '-Wno-implicit', '-Wno-strict-prototypes'),
+	      'CCFLAGS' => join(' ', '-g -O2 -fPIC -DPIC -Wall -W -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wno-char-subscripts -Wno-unused-parameter -Wformat-security -g3 -fno-delete-null-pointer-checks -D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions -fexceptions -Wno-missing-field-initializers -D_GNU_SOURCE -D_REENTRANT        ', '-Wno-unused-variable', '-Wno-missing-prototypes', '-Wno-implicit', '-Wno-strict-prototypes'),
 	      'dynamic_lib'	=> { OTHERLDFLAGS => join(' ', @ldaddp, @ldadd, @ldlibs) },
 	      'OPTIMIZE'=> '-g',
-	      'INC'	=> join(' ', @cppflags, map { '-I../'. $_ } @libdir) . '  -DRPM_OS_LINUX=020633           -I/usr/include/neon          ',
+	      'INC'	=> join(' ', @cppflags, map { '-I../'. $_ } @libdir) . '  -DRPM_OS_LINUX=020632   -I/usr/include/nss3 -I/usr/include/nspr4     -I/usr/include/python2.6 -I/usr/include/python2.6  ',
 	      'INSTALLMAN1DIR'	=> '${prefix}/share/man/man1',
 	      'INSTALLMAN3DIR'	=> '${prefix}/share/man/man3',
-	      'INSTALLDIRS'	=> 'vendor',
+	      
 );
 
