@@ -15,21 +15,23 @@ EXTRA_DIST = abi-compliance-checker.pl api-sanity-autotest.pl \
 	deb_control deb_md5sums deb_postinst deb_postrm deb_preinst deb_prerm \
 	executabledeps.sh \
 	find-debuginfo.sh find-lang.sh find-prov.pl find-req.pl \
-	find-provides.ksyms find-requires.ksyms kmodtool \
+	find-provides.ksyms find-requires.ksyms kmod-deps.sh kmodtool \
 	cpanflute cpanflute2 Specfile.pm \
 	find-provides.perl find-requires.perl \
 	find-provides.php find-requires.php \
 	freshen.sh gendiff getpo.sh http.req \
 	check-java-closure.sh java.prov.sh java.req.sh \
-	javadeps.sh libtooldeps.sh \
+	gstreamer.sh javadeps.sh libtooldeps.sh mgo \
 	mono-find-provides mono-find-requires \
+	check-multiarch-files multiarch-platform multiarch-dispatch \
+	multiarch-dispatch.h mkmultiarch \
 	nix_meta \
 	osgideps.pl pkgconfigdeps.sh \
-	perldeps.pl perl.prov perl.req pythondeps.sh \
+	perldeps.pl perl.prov perl.req pythondeps.sh pythoneggs.py \
 	php.prov php.req rpm2cpio \
 	rpmdb_loadcvt rpmdiff rpmdiff.cgi \
 	rpm.daily rpm.log rpm.xinetd \
-	rpmsort rt-reloc-wrapper.sh ruby-config symset-table \
+	rpmsort rt-reloc-wrapper.sh ruby-config rubygems.rb symset-table \
 	sql.prov sql.req symclash.py symclash.sh tcl.req tgpg trpm u_pkg.sh \
 	vcheck vpkg-provides.sh vpkg-provides2.sh \
 	wdj_srpm wdj_srpm_mongo \
@@ -43,7 +45,7 @@ EXTRA_DIST = abi-compliance-checker.pl api-sanity-autotest.pl \
 
 all:
 
-bin_SCRIPTS = gendiff
+bin_SCRIPTS = gendiff multiarch-dispatch multiarch-platform
 
 pkglibdir =		@USRLIBRPM@
 pkglib_SCRIPTS = \
@@ -56,16 +58,18 @@ pkglib_SCRIPTS = \
 	find-requires.perl getpo.sh http.req \
 	javadeps.sh libtooldeps.sh \
 	mono-find-provides mono-find-requires \
+	check-multiarch-files mkmultiarch \
 	osgideps.pl pkgconfigdeps.sh \
-	perldeps.pl perl.prov perl.req pythondeps.sh \
+	perldeps.pl perl.prov perl.req pythondeps.sh pythoneggs.py \
 	php.prov php.req \
 	rpm2cpio rpmdb_loadcvt \
 	rpm.daily rpm.log rpm.xinetd \
+	rubygems.rb \
 	tgpg u_pkg.sh \
 	vcheck vpkg-provides.sh vpkg-provides2.sh
 
 pkglibbindir =		@USRLIBRPM@/bin
-pkglibbin_SCRIPTS = abi-compliance-checker.pl api-sanity-autotest.pl
+pkglibbin_SCRIPTS = abi-compliance-checker.pl api-sanity-autotest.pl mgo
 
 pkglibhelperdir =	@USRLIBRPM@/helpers
 pkglibhelper_SCRIPTS = 	${HELPERS}
@@ -84,6 +88,9 @@ pkglibqf_DATA = \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = rpm.pc
+
+pkgincdir = $(includedir)
+pkginc_HEADERS = multiarch-dispatch.h
 
 install-exec-hook:
 if WITH_PATH_VERSIONED

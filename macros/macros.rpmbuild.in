@@ -1,7 +1,7 @@
 #/*! \page build_macros Default configuration: @USRLIBRPM@/macros.rpmbuild
 # \verbatim
 #
-# $Id: macros.rpmbuild.in,v 1.4 2010/03/31 12:22:06 jbj Exp $
+# $Id: macros.rpmbuild.in,v 1.4.4.3 2011/05/09 16:00:27 pkarlsen Exp $
 #
 # This file contains rpmbuild configuration macros.
 #
@@ -628,6 +628,9 @@ done \
 #   conditionals.
 #
 %ix86   i386 i486 i586 i686 pentium3 pentium4 athlon
+
+# arch macro for all EFI-compatible architectures
+%efi %{ix86} x86_64 ia64
 
 # same thing for arm
 %arm    arm armv3 armv3l armv3b armv4 armv4l armv4b armv5 armv5l armv5b armv5te armv5tel armv5teb xscale armv6 armv6l

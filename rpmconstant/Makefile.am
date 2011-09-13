@@ -1,4 +1,4 @@
-# $Id: Makefile.am,v 1.13 2010/11/02 15:19:23 jbj Exp $
+# $Id: Makefile.am,v 1.13.2.2 2011/05/09 04:06:33 jbj Exp $
 
 AUTOMAKE_OPTIONS = 1.4 foreign
 

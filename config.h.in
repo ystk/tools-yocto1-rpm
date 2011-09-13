@@ -404,7 +404,7 @@
 /* Define to 1 if you have the <libio.h> header file. */
 #undef HAVE_LIBIO_H
 
-/* Define to 1 if you have the 'js' library (-ljs). */
+/* Define to 1 if you have the 'mozjs185' library (-lmozjs185). */
 #undef HAVE_LIBJS
 
 /* Define to 1 if you have the `keyutils' library (-lkeyutils). */
@@ -421,6 +421,9 @@
 
 /* Define to 1 if you have the `magic' library (-lmagic). */
 #undef HAVE_LIBMAGIC
+
+/* Define to 1 if you have the `mozjs185' library (-lmozjs185). */
+#undef HAVE_LIBMOZJS185
 
 /* Define to 1 if you have the `neon' library (-lneon). */
 #undef HAVE_LIBNEON
@@ -1095,8 +1098,17 @@
 /* Colon separated RPM POPT configuration files path */
 #undef RPMPOPTFILES
 
+/* Permit in RPM version comparison that digits beat alpha */
+#undef RPMVERCMP_DIGITS_BEAT_ALPHA
+
+/* Adds RPM Lua extensions based on rpmlib functionality */
+#undef RPM_LUA_EXTENSIONS_BASED_ON_RPMLIB
+
 /* official name of program */
 #undef RPM_NAME
+
+/* permit to disable via macro the automatic dirname and symlink dependecy */
+#undef RPM_OPTIONAL_DIRNAME_AND_SYMLINK_DEPS
 
 /* Vendor is Ark */
 #undef RPM_VENDOR_ARK
@@ -1106,6 +1118,12 @@
 
 /* Vendor is Mandriva */
 #undef RPM_VENDOR_MANDRIVA
+
+/* Vendor is openmamba */
+#undef RPM_VENDOR_OPENMAMBA
+
+/* Vendor is suse */
+#undef RPM_VENDOR_SUSE
 
 /* The size of `char', as computed by sizeof. */
 #undef SIZEOF_CHAR
@@ -1284,9 +1302,6 @@
 /* Define to 1 if to use GPSEE as the embedded JS interpreter */
 #undef WITH_GPSEE
 
-/* Define as 1 if building with JavaScript library */
-#undef WITH_JS
-
 /* Define as 1 if building with Linux keyutils library */
 #undef WITH_KEYUTILS
 
@@ -1298,6 +1313,9 @@
 
 /* Define if building with internal Lua */
 #undef WITH_LUA_INTERNAL
+
+/* Define as 1 if building with JavaScript library */
+#undef WITH_MOZJS185
 
 /* Define as 1 if building with Neon library */
 #undef WITH_NEON

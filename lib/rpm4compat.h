@@ -1,7 +1,7 @@
 /*
  * Copyright © 2008 Per Øyvind Karlsen <peroyvind@mandriva.org>
  *
- * $Id: rpm4compat.h,v 2.32.2.3 2010/12/09 21:21:12 pkarlsen Exp $
+ * $Id: rpm4compat.h,v 2.32.2.4 2011/01/09 10:02:56 pkarlsen Exp $
  */
 
 #ifndef	H_RPM4COMPAT
@@ -41,9 +41,10 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <errno.h>
 
 #define WITH_DB
-#define _RPMDB_INTERNAL
+#define	_RPMDB_INTERNAL
 #define _RPMTAG_INTERNAL
 #define _RPMEVR_INTERNAL
 #define _RPMPS_INTERNAL

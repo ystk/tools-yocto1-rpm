@@ -40,7 +40,8 @@ _rpmmodule_la_LIBADD = \
 	$(top_builddir)/rpmdb/librpmdb.la \
 	$(top_builddir)/rpmio/librpmio.la \
 	$(top_builddir)/misc/librpmmisc.la \
-	@LTLIBINTL@
+	@LTLIBINTL@ \
+	-lpython$(PYTHON_VERSION)
 
 _rpmmodule_la_SOURCES = \
 	rpmmodule.c header-py.c \
@@ -63,5 +64,5 @@ lint:
 
 # FIXME: using .libs/ is not really correct, but whatever
 check-local:
-#	@export PYTHONPATH=$(PYTHONPATH):$(shell pwd):$(shell pwd)/.libs/ && \
-#	cd test && python test_rpm.py
+	@export PYTHONPATH=$(PYTHONPATH):$(shell pwd):$(shell pwd)/.libs/ && \
+	cd test && python test_rpm.py

@@ -822,7 +822,11 @@ int main(int argc, const char ** argv)
 	case 'b':
 	    ba->buildAmount |= RPMBUILD_PACKAGEBINARY;
 	    ba->buildAmount |= RPMBUILD_CLEAN;
+#if defined(RPM_VENDOR_MANDRIVA)
+	    if ((ba->buildChar == 'a' || ba->buildChar == 'b') && ba->shortCircuit)
+#else
 	    if ((ba->buildChar == 'b') && ba->shortCircuit)
+#endif
 		/*@innerbreak@*/ break;
 	    /*@fallthrough@*/
 	case 'i':
@@ -1064,6 +1068,8 @@ exit:
     /* XXX don't overflow single byte exit status */
     /* XXX status 255 is special to xargs(1) */
     if (ec > 254) ec = 254;
+
+     rpmlog(RPMLOG_DEBUG, D_("exit code: %d\n"), ec);
 
     /*@-globstate@*/
     return ec;

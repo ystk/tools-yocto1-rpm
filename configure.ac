@@ -8,7 +8,7 @@ dnl ##
 
 AC_PREREQ(2.63)
 m4_define([PACKAGE_BUGREPORT_DEFAULT], [rpm-devel@rpm5.org])
-AC_INIT([rpm],[5.4.0],[PACKAGE_BUGREPORT_DEFAULT])
+AC_INIT([rpm],[5.4.1],[PACKAGE_BUGREPORT_DEFAULT])
 PACKAGE_TIMESTAMP="2010-12-29" dnl # YYYY[-MM[-DD[ HH[:MM]]]]
 AC_MSG_TITLE([RPM Package Manager (RPM)], [$PACKAGE_VERSION])
 
@@ -351,6 +351,45 @@ AM_CONDITIONAL(
     [ENABLE_BUILD_LAFILES],
     [test ".$do_build_lafiles" = .yes])
 
+dnl # optional sysmlink and parentdir dependency
+AC_ARG_ENABLE(
+    [dirname-and-symlink-deps],
+    AS_HELP_STRING([--disable-dirname-and-symlink-deps],[permit to disable via macro the automatic dirname and symlink dependecy]),
+    [ do_optional_dirname_and_symlink_deps=$enableval ],
+    [ do_optional_dirname_and_symlink_deps=yes ])
+
+AS_IF([test "x$do_optional_dirname_and_symlink_deps" != xyes],
+  [ 
+  AC_DEFINE([RPM_OPTIONAL_DIRNAME_AND_SYMLINK_DEPS],[1],[permit to disable via macro the automatic dirname and symlink dependecy])
+  ])
+
+
+dnl #  Adds RPM Lua extensions based on rpmlib functionality
+AC_ARG_ENABLE(
+    [rpm-lua-extensions-based-on-rpmlib],
+    AS_HELP_STRING([--enable-rpm-lua-extensions-based-on-rpmlib],[Adds RPM Lua extensions based on rpmlib functionality (default:no)]),
+    [ do_rpm_lua_extensions_based_on_rpmlib=$enableval ],
+    [ do_rpm_lua_extensions_based_on_rpmlib=no ])
+
+AS_IF([test "x$do_rpm_lua_extensions_based_on_rpmlib" != xno],
+  [ 
+  AC_DEFINE([RPM_LUA_EXTENSIONS_BASED_ON_RPMLIB],[1],[Adds RPM Lua extensions based on rpmlib functionality])
+  ])
+
+
+dnl # Permit to revert to the old rpmvercmp behavior where digits beat alpha
+dnl # called in VENDOR old-comparision-behaviour
+AC_ARG_ENABLE(
+    [rpmvercmp-digits-beat-alpha],
+    AS_HELP_STRING([--enable-rpmvercmp-digits-beat-alpha],[Permit in RPM version comparison that digits beat alpha (default:no)]),
+    [ do_rpmvercmp_digits_beat_alpha=$enableval ],
+    [ do_rpmvercmp_digits_beat_alpha=no ])
+
+AS_IF([test "x$do_rpmvercmp_digits_beat_alpha" != xno],
+  [ 
+  AC_DEFINE([RPMVERCMP_DIGITS_BEAT_ALPHA],[1],[Permit in RPM version comparison that digits beat alpha])
+  ])
+
 dnl # FIXME: partly Linux-specific only!?
 dnl # (but at least it usually doesn't harm on other platforms)
 CFLAGS="$CFLAGS -D_GNU_SOURCE -D_REENTRANT"
@@ -482,6 +521,7 @@ AC_PATH_PROG(__FILE, file, %{_bindir}/file, $MYPATH)
 AC_PATH_PROG(__GIT, git, %{_bindir}/git, $MYPATH)
 AC_PATH_PROG(__GPG, gpg2, %{_bindir}/gpg2, $MYPATH)
 AC_PATH_PROG(__GSR, gsr, %{_bindir}/gsr, $MYPATH)
+AC_PATH_PROG(__GST_INSPECT, gst-inspect-0.10, %{_bindir}/gst-inspect-0.10, $MYPATH)
 AC_PATH_PROG(__GZIP, gzip, /bin/gzip, $MYPATH)
 AC_PATH_PROG(__HG, hg, %{_bindir}/hg, $MYPATH)
 AC_PATH_PROG(__ID, id, /usr/bin/id, $MYPATH)
@@ -494,6 +534,7 @@ AC_PATH_PROG(__LZOP, lzop, %{_bindir}/lzop, $MYPATH)
 AC_PATH_PROG(__MAKE, make, %{_bindir}/make, $MYPATH)
 AC_PATH_PROG(__MKDIR, mkdir, /bin/mkdir, $MYPATH)
 AC_PATH_PROG(__MONGO, mongo, %{_bindir}/mongo, $MYPATH)
+AC_PATH_PROG(__MODINFO, modinfo, /sbin/modinfo, $MYPATH)
 AC_PATH_PROG(__MV, mv, /bin/mv, $MYPATH)
 AC_PATH_PROG(__PATCH, patch, %{_bindir}/patch, $MYPATH)
 AC_PATH_PROG(__PAX, pax, %{_bindir}/pax, $MYPATH)
@@ -1592,12 +1633,12 @@ dnl # JavaScript
 WITH_JS_SUBDIR=""
 WITH_SPIDERMONKEY_SUBDIR=""
 RPM_CHECK_LIB(
-    [JavaScript], [js],
-    [js], [JS_NewContext], [jsapi.h],
-    [no,internal:external:none], [js:src:src],
+    [JavaScript], [mozjs185],
+    [mozjs185], [JS_NewContext], [jsapi.h],
+    [no,external:none], [mozjs185:src:src],
     [ if test ".$RPM_CHECK_LIB_LOCATION" = .internal; then
           WITH_SPIDERMONKEY_SUBDIR="$WITH_JS_SUBDIR/src"
-          AC_DEFINE(HAVE_LIBJS, 1, [Define to 1 if you have the 'js' library (-ljs).])
+          AC_DEFINE(HAVE_LIBJS, 1, [Define to 1 if you have the 'mozjs185' library (-lmozjs185).])
       else
           WITH_JS_SUBDIR=js
       fi
@@ -1735,8 +1776,12 @@ RPM_CHECK_LIB(
 
 dnl # OSSP uuid
 dnl XXX hack-o-round typedef __darwin_uuid_t uuid_t; in Mac OS X <unistd.h>
+case "$host" in
+    *-*-darwin* )
 mv confdefs.h confdefs.h-SAVE
 grep -v 'define HAVE_UNISTD_H' confdefs.h-SAVE > confdefs.h
+;;
+esac
 RPM_CHECK_LIB(
     [OSSP uuid], [uuid],
     [ossp-uuid uuid], [uuid_import], [uuid.h],
@@ -1746,7 +1791,10 @@ RPM_CHECK_LIB(
           WITH_LUA_SUBDIR_DEF="$WITH_LUA_SUBDIR_DEF -DLUA_USE_UUID"
       fi
     ], [])
-mv confdefs.h-SAVE confdefs.h
+case "$host" in
+    *-*-darwin* )
+mv confdefs.h-SAVE confdefs.h;;
+esac
 
 dnl # Syck
 RPM_CHECK_LIB(
@@ -1929,7 +1977,11 @@ mint)		RPMCANONARCH=m68kmint ;;
 esac
 RPMCANONVENDOR="$target_vendor"
 case "${target_vendor}" in
-unknown|pc|ibm|redhat|pld|mandriva|conectiva|lvr|yellowdog|caos|crux|ark)
+unknown|pc|ibm|redhat|pld|mandriva|conectiva|lvr|yellowdog|caos|crux|ark|momonga|openmamba)
+	test -f /etc/SuSE-release &&		RPMCANONVENDOR=suse
+	test -f /etc/momonga-release &&		RPMCANONVENDOR=momonga
+        test -f /etc/owl-release -o -f /etc/owl-setup.conf -o -d /etc/mtree && RPMCANONVENDOR=openwall
+	test -f /etc/fedora-release &&		RPMCANONVENDOR=fedora
 	test -f /etc/redhat-release &&		RPMCANONVENDOR=redhat
 	test -f /etc/pld-release &&		RPMCANONVENDOR=pld
 	test -f /etc/mandriva-release &&	RPMCANONVENDOR=mandriva
@@ -1939,6 +1991,7 @@ unknown|pc|ibm|redhat|pld|mandriva|conectiva|lvr|yellowdog|caos|crux|ark)
 	test -f /etc/caos-release &&		RPMCANONVENDOR=caos
 	test -f /usr/bin/crux &&		RPMCANONVENDOR=crux
 	test -f /etc/ark-release &&		RPMCANONVENDOR=ark
+	test -f /etc/openmamba-release &&	RPMCANONVENDOR=openmamba
 	;;
 esac
 RPMCANONOS="$target_os_noversion"
@@ -2237,7 +2290,7 @@ dnl # determine whether to build using a specific vendor's changes or not
 AC_MSG_CHECKING([if building for a specfic vendor])
 AC_ARG_WITH(
     [vendor],
-    AS_HELP_STRING([--with-vendor=VENDOR], [build with a supported vendor's specific set of changes: mandriva, ark, fedora]),
+    AS_HELP_STRING([--with-vendor=VENDOR], [build with a supported vendor's specific set of changes: mandriva, ark, fedora, openmamba]),
     [if test ".$withval" != .no; then
 	    case "$withval" in
 	    "mandriva")
@@ -2249,6 +2302,12 @@ AC_ARG_WITH(
 		    ;;
 	    "fedora")
 		    AC_DEFINE([RPM_VENDOR_FEDORA], 1, Vendor is Fedora)
+		    ;;
+	    "openmamba")
+		    AC_DEFINE([RPM_VENDOR_OPENMAMBA], 1, Vendor is openmamba)
+		    ;;
+	    "suse")
+		    AC_DEFINE([RPM_VENDOR_SUSE], 1, Vendor is suse)
 		    ;;
 	    esac
 	    AC_MSG_RESULT([$withval])
@@ -2283,9 +2342,9 @@ AC_CONFIG_FILES([ po/Makefile.in
     scripts/Makefile
     rpmdb/DB_CONFIG
     macros/macros macros/macros.rpmbuild
-    macros/cmake macros/java macros/libtool macros/mandriva macros/mono
-    macros/perl macros/pkgconfig macros/php macros/python macros/ruby
-    macros/selinux macros/tcl
+    macros/cmake macros/gstreamer macros/java macros/kernel macros/libtool
+    macros/mandriva macros/suse macros/fedora macros/mono macros/perl macros/pkgconfig macros/php
+    macros/python macros/ruby macros/selinux macros/tcl
     doc/Makefile
     doc/manual/Makefile doc/fr/Makefile doc/ja/Makefile doc/ko/Makefile
     doc/pl/Makefile doc/ru/Makefile doc/sk/Makefile

@@ -5,13 +5,12 @@
 /*@-noeffect -branchstate -sizeoftype -usereleased @*/
 /*@+charint -exportheader +longunsignedintegral -redecl -type -warnlintcomments @*/
 /*@unused@*/
-
-/* A Bison parser, made by GNU Bison 2.4.1.  */
+/* A Bison parser, made by GNU Bison 2.4.2.  */
 
 /* Skeleton implementation for Bison's Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2006, 2009-2010 Free Software
+   Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -53,7 +52,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.4.1"
+#define YYBISON_VERSION "2.4.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -282,7 +281,7 @@ extern time_t get_date(char * p, struct timeb * now);
 
 
 /* Line 189 of yacc.c  */
-#line 279 "getdate.c"
+#line 278 "getdate.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -355,7 +354,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 352 "getdate.c"
+#line 351 "getdate.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -367,7 +366,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 364 "getdate.c"
+#line 363 "getdate.c"
 
 #ifdef short
 # undef short
@@ -417,7 +416,7 @@ typedef short int yytype_int16;
 #define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
 
 #ifndef YY_
-# if YYENABLE_NLS
+# if defined YYENABLE_NLS && YYENABLE_NLS
 #  if ENABLE_NLS
 #   include <libintl.h> /* INFRINGES ON USER NAME SPACE */
 #   define YY_(msgid) dgettext ("bison-runtime", msgid)
@@ -804,9 +803,18 @@ static const yytype_uint8 yystos[] =
 
 /* Like YYERROR except do call yyerror.  This remains here temporarily
    to ease the transition to the new meaning of YYERROR, for GCC.
-   Once GCC version 2 has supplanted version 1, this can go.  */
+   Once GCC version 2 has supplanted version 1, this can go.  However,
+   YYFAIL appears to be in use.  Nevertheless, it is formally deprecated
+   in Bison 2.4.2's NEWS entry, where a plan to phase it out is
+   discussed.  */
 
 #define YYFAIL		goto yyerrlab
+#if defined YYFAIL
+  /* This is here to suppress warnings from the GCC cpp's
+     -Wunused-macros.  Normally we don't worry about that warning, but
+     some users do, and we want to make it easy for users to remove
+     YYFAIL uses, which will produce warnings from Bison 2.5.  */
+#endif
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
@@ -863,7 +871,7 @@ while (YYID (0))
    we won't break user code: when these are the locations we know.  */
 
 #ifndef YY_LOCATION_PRINT
-# if YYLTYPE_IS_TRIVIAL
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
 #  define YY_LOCATION_PRINT(File, Loc)			\
      fprintf (File, "%d.%d-%d.%d",			\
 	      (Loc).first_line, (Loc).first_column,	\
@@ -1602,7 +1610,7 @@ yyreduce:
     {
         case 4:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 224 "./getdate.y"
     {
 	    yyHaveTime++;
@@ -1611,7 +1619,7 @@ yyreduce:
 
   case 5:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 227 "./getdate.y"
     {
 	    yyHaveZone++;
@@ -1620,7 +1628,7 @@ yyreduce:
 
   case 6:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 230 "./getdate.y"
     {
 	    yyHaveDate++;
@@ -1629,7 +1637,7 @@ yyreduce:
 
   case 7:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 233 "./getdate.y"
     {
 	    yyHaveDay++;
@@ -1638,7 +1646,7 @@ yyreduce:
 
   case 8:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 236 "./getdate.y"
     {
 	    yyHaveRel++;
@@ -1647,7 +1655,7 @@ yyreduce:
 
   case 10:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 242 "./getdate.y"
     {
 	    yyHour = (yyvsp[(1) - (2)].Number);
@@ -1659,7 +1667,7 @@ yyreduce:
 
   case 11:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 248 "./getdate.y"
     {
 	    yyHour = (yyvsp[(1) - (4)].Number);
@@ -1671,7 +1679,7 @@ yyreduce:
 
   case 12:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 254 "./getdate.y"
     {
 	    yyHour = (yyvsp[(1) - (4)].Number);
@@ -1684,7 +1692,7 @@ yyreduce:
 
   case 13:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 261 "./getdate.y"
     {
 	    yyHour = (yyvsp[(1) - (6)].Number);
@@ -1696,7 +1704,7 @@ yyreduce:
 
   case 14:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 267 "./getdate.y"
     {
 	    yyHour = (yyvsp[(1) - (6)].Number);
@@ -1710,7 +1718,7 @@ yyreduce:
 
   case 15:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 277 "./getdate.y"
     {
 	    yyTimezone = (yyvsp[(1) - (1)].Number);
@@ -1720,7 +1728,7 @@ yyreduce:
 
   case 16:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 281 "./getdate.y"
     {
 	    yyTimezone = (yyvsp[(1) - (1)].Number);
@@ -1730,7 +1738,7 @@ yyreduce:
 
   case 17:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 286 "./getdate.y"
     {
 	    yyTimezone = (yyvsp[(1) - (2)].Number);
@@ -1740,7 +1748,7 @@ yyreduce:
 
   case 18:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 292 "./getdate.y"
     {
 	    yyDayOrdinal = 1;
@@ -1750,7 +1758,7 @@ yyreduce:
 
   case 19:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 296 "./getdate.y"
     {
 	    yyDayOrdinal = 1;
@@ -1760,7 +1768,7 @@ yyreduce:
 
   case 20:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 300 "./getdate.y"
     {
 	    yyDayOrdinal = (yyvsp[(1) - (2)].Number);
@@ -1770,7 +1778,7 @@ yyreduce:
 
   case 21:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 306 "./getdate.y"
     {
 	    yyMonth = (yyvsp[(1) - (3)].Number);
@@ -1780,7 +1788,7 @@ yyreduce:
 
   case 22:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 310 "./getdate.y"
     {
 	    if ((yyvsp[(1) - (5)].Number) >= 100) {
@@ -1797,7 +1805,7 @@ yyreduce:
 
   case 23:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 321 "./getdate.y"
     {
 	    /* ISO 8601 format.  yyyy-mm-dd.  */
@@ -1809,7 +1817,7 @@ yyreduce:
 
   case 24:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 327 "./getdate.y"
     {
 	    /* e.g. 17-JUN-1992.  */
@@ -1821,7 +1829,7 @@ yyreduce:
 
   case 25:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 333 "./getdate.y"
     {
 	    yyMonth = (yyvsp[(1) - (2)].Number);
@@ -1831,7 +1839,7 @@ yyreduce:
 
   case 26:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 337 "./getdate.y"
     {
 	    yyMonth = (yyvsp[(1) - (4)].Number);
@@ -1842,7 +1850,7 @@ yyreduce:
 
   case 27:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 342 "./getdate.y"
     {
 	    yyMonth = (yyvsp[(2) - (2)].Number);
@@ -1852,7 +1860,7 @@ yyreduce:
 
   case 28:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 346 "./getdate.y"
     {
 	    yyMonth = (yyvsp[(2) - (3)].Number);
@@ -1863,7 +1871,7 @@ yyreduce:
 
   case 29:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 353 "./getdate.y"
     {
 	    yyRelSeconds = -yyRelSeconds;
@@ -1873,7 +1881,7 @@ yyreduce:
 
   case 31:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 360 "./getdate.y"
     {
 	    yyRelSeconds += (yyvsp[(1) - (2)].Number) * (yyvsp[(2) - (2)].Number) * 60L;
@@ -1882,7 +1890,7 @@ yyreduce:
 
   case 32:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 363 "./getdate.y"
     {
 	    yyRelSeconds += (yyvsp[(1) - (2)].Number) * (yyvsp[(2) - (2)].Number) * 60L;
@@ -1891,7 +1899,7 @@ yyreduce:
 
   case 33:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 366 "./getdate.y"
     {
 	    yyRelSeconds += (yyvsp[(1) - (1)].Number) * 60L;
@@ -1900,7 +1908,7 @@ yyreduce:
 
   case 34:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 369 "./getdate.y"
     {
 	    yyRelSeconds += (yyvsp[(1) - (2)].Number);
@@ -1909,7 +1917,7 @@ yyreduce:
 
   case 35:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 372 "./getdate.y"
     {
 	    yyRelSeconds += (yyvsp[(1) - (2)].Number);
@@ -1918,7 +1926,7 @@ yyreduce:
 
   case 36:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 375 "./getdate.y"
     {
 	    yyRelSeconds++;
@@ -1927,7 +1935,7 @@ yyreduce:
 
   case 37:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 378 "./getdate.y"
     {
 	    yyRelMonth += (yyvsp[(1) - (2)].Number) * (yyvsp[(2) - (2)].Number);
@@ -1936,7 +1944,7 @@ yyreduce:
 
   case 38:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 381 "./getdate.y"
     {
 	    yyRelMonth += (yyvsp[(1) - (2)].Number) * (yyvsp[(2) - (2)].Number);
@@ -1945,7 +1953,7 @@ yyreduce:
 
   case 39:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 384 "./getdate.y"
     {
 	    yyRelMonth += (yyvsp[(1) - (1)].Number);
@@ -1954,7 +1962,7 @@ yyreduce:
 
   case 40:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 389 "./getdate.y"
     {
 	    if (yyHaveTime && yyHaveDate && !yyHaveRel)
@@ -1985,7 +1993,7 @@ yyreduce:
 
   case 41:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 416 "./getdate.y"
     {
 	    (yyval.Meridian) = MER24;
@@ -1994,7 +2002,7 @@ yyreduce:
 
   case 42:
 
-/* Line 1455 of yacc.c  */
+/* Line 1464 of yacc.c  */
 #line 419 "./getdate.y"
     {
 	    (yyval.Meridian) = (yyvsp[(1) - (1)].Meridian);
@@ -2003,8 +2011,8 @@ yyreduce:
 
 
 
-/* Line 1455 of yacc.c  */
-#line 2001 "getdate.c"
+/* Line 1464 of yacc.c  */
+#line 2009 "getdate.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2215,7 +2223,7 @@ yyreturn:
 
 
 
-/* Line 1675 of yacc.c  */
+/* Line 1684 of yacc.c  */
 #line 424 "./getdate.y"
 
 

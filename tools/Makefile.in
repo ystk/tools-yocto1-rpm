@@ -37,10 +37,10 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-EXTRA_PROGRAMS = augtool$(EXEEXT) cudftool$(EXEEXT) debugedit$(EXEEXT) \
-	grep$(EXEEXT) nix-build$(EXEEXT) nix-channel$(EXEEXT) \
-	nix-collect-garbage$(EXEEXT) nix-copy-closure$(EXEEXT) \
-	nix-env$(EXEEXT) nix-hash$(EXEEXT) \
+EXTRA_PROGRAMS = augtool$(EXEEXT) cudftool$(EXEEXT) dbconvert$(EXEEXT) \
+	debugedit$(EXEEXT) grep$(EXEEXT) nix-build$(EXEEXT) \
+	nix-channel$(EXEEXT) nix-collect-garbage$(EXEEXT) \
+	nix-copy-closure$(EXEEXT) nix-env$(EXEEXT) nix-hash$(EXEEXT) \
 	nix-install-package$(EXEEXT) nix-instantiate$(EXEEXT) \
 	nix-log2xml$(EXEEXT) nix-prefetch-url$(EXEEXT) \
 	nix-pull$(EXEEXT) nix-push$(EXEEXT) nix-store$(EXEEXT) \
@@ -50,11 +50,11 @@ EXTRA_PROGRAMS = augtool$(EXEEXT) cudftool$(EXEEXT) debugedit$(EXEEXT) \
 bin_PROGRAMS = rpm2cpio$(EXEEXT)
 pkgbin_PROGRAMS = @WITH_AUGEAS_AUGTOOL@ chroot$(EXEEXT) cp$(EXEEXT) \
 	@WITH_CUDF_CUDFTOOL@ find$(EXEEXT) mtree$(EXEEXT) \
-	@WITH_SEMANAGE_SEMODULE@ wget$(EXEEXT) rpmcache$(EXEEXT) \
-	rpmdigest$(EXEEXT) rpmrepo$(EXEEXT) rpmspecdump$(EXEEXT) \
-	rpmcmp$(EXEEXT) rpmdeps$(EXEEXT) sqlite3$(EXEEXT) \
-	@WITH_KEYUTILS_RPMKEY@ @WITH_LIBELF_DEBUGEDIT@ $(am__EXEEXT_1) \
-	$(am__EXEEXT_2)
+	@WITH_SEMANAGE_SEMODULE@ wget$(EXEEXT) dbconvert$(EXEEXT) \
+	rpmcache$(EXEEXT) rpmdigest$(EXEEXT) rpmrepo$(EXEEXT) \
+	rpmspecdump$(EXEEXT) rpmcmp$(EXEEXT) rpmdeps$(EXEEXT) \
+	sqlite3$(EXEEXT) @WITH_KEYUTILS_RPMKEY@ \
+	@WITH_LIBELF_DEBUGEDIT@ $(am__EXEEXT_1) $(am__EXEEXT_2)
 @WITH_XAR_TRUE@am__append_1 = txar
 
 ###if WITH_DB_INTERNAL
@@ -151,6 +151,16 @@ cudftool_DEPENDENCIES = $(am__DEPENDENCIES_2)
 cudftool_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(cudftool_LDFLAGS) \
 	$(LDFLAGS) -o $@
+am_dbconvert_OBJECTS = dbconvert.$(OBJEXT)
+dbconvert_OBJECTS = $(am_dbconvert_OBJECTS)
+am__DEPENDENCIES_3 = $(top_builddir)/rpmdb/librpmdb.la \
+	$(am__DEPENDENCIES_2)
+am__DEPENDENCIES_4 = $(top_builddir)/lib/librpm.la \
+	$(am__DEPENDENCIES_3)
+dbconvert_DEPENDENCIES = $(am__DEPENDENCIES_4)
+dbconvert_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(dbconvert_LDFLAGS) $(LDFLAGS) -o $@
 am__dbsql_SOURCES_DIST = dbsql.c
 @WITH_DBSQL_TRUE@am_dbsql_OBJECTS = dbsql.$(OBJEXT)
 dbsql_OBJECTS = $(am_dbsql_OBJECTS)
@@ -160,10 +170,6 @@ dbsql_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	$(LDFLAGS) -o $@
 am_debugedit_OBJECTS = debugedit.$(OBJEXT) hashtab.$(OBJEXT)
 debugedit_OBJECTS = $(am_debugedit_OBJECTS)
-am__DEPENDENCIES_3 = $(top_builddir)/rpmdb/librpmdb.la \
-	$(am__DEPENDENCIES_2)
-am__DEPENDENCIES_4 = $(top_builddir)/lib/librpm.la \
-	$(am__DEPENDENCIES_3)
 debugedit_DEPENDENCIES = $(am__DEPENDENCIES_4)
 debugedit_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -381,9 +387,9 @@ CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(augtool_SOURCES) $(chroot_SOURCES) $(cp_SOURCES) \
-	$(cudftool_SOURCES) $(dbsql_SOURCES) $(debugedit_SOURCES) \
-	$(find_SOURCES) $(grep_SOURCES) $(mtree_SOURCES) \
-	$(nix_build_SOURCES) $(nix_channel_SOURCES) \
+	$(cudftool_SOURCES) $(dbconvert_SOURCES) $(dbsql_SOURCES) \
+	$(debugedit_SOURCES) $(find_SOURCES) $(grep_SOURCES) \
+	$(mtree_SOURCES) $(nix_build_SOURCES) $(nix_channel_SOURCES) \
 	$(nix_collect_garbage_SOURCES) $(nix_copy_closure_SOURCES) \
 	$(nix_env_SOURCES) $(nix_hash_SOURCES) \
 	$(nix_install_package_SOURCES) $(nix_instantiate_SOURCES) \
@@ -397,21 +403,22 @@ SOURCES = $(augtool_SOURCES) $(chroot_SOURCES) $(cp_SOURCES) \
 	$(xiu_echo_SOURCES) $(xiu_hash_SOURCES) \
 	$(xiu_instantiate_SOURCES) $(xiu_store_SOURCES)
 DIST_SOURCES = $(augtool_SOURCES) $(chroot_SOURCES) $(cp_SOURCES) \
-	$(cudftool_SOURCES) $(am__dbsql_SOURCES_DIST) \
-	$(debugedit_SOURCES) $(find_SOURCES) $(grep_SOURCES) \
-	$(mtree_SOURCES) $(nix_build_SOURCES) $(nix_channel_SOURCES) \
-	$(nix_collect_garbage_SOURCES) $(nix_copy_closure_SOURCES) \
-	$(nix_env_SOURCES) $(nix_hash_SOURCES) \
-	$(nix_install_package_SOURCES) $(nix_instantiate_SOURCES) \
-	$(nix_log2xml_SOURCES) $(nix_prefetch_url_SOURCES) \
-	$(nix_pull_SOURCES) $(nix_push_SOURCES) $(nix_store_SOURCES) \
-	$(nix_worker_SOURCES) $(rpm2cpio_SOURCES) $(rpmcache_SOURCES) \
-	$(rpmcmp_SOURCES) $(rpmdeps_SOURCES) $(rpmdigest_SOURCES) \
-	$(rpmkey_SOURCES) $(rpmrepo_SOURCES) $(rpmspecdump_SOURCES) \
-	$(sandbox_SOURCES) $(semodule_SOURCES) $(spooktool_SOURCES) \
-	$(sqlite3_SOURCES) $(am__txar_SOURCES_DIST) $(wget_SOURCES) \
-	$(xiu_echo_SOURCES) $(xiu_hash_SOURCES) \
-	$(xiu_instantiate_SOURCES) $(xiu_store_SOURCES)
+	$(cudftool_SOURCES) $(dbconvert_SOURCES) \
+	$(am__dbsql_SOURCES_DIST) $(debugedit_SOURCES) $(find_SOURCES) \
+	$(grep_SOURCES) $(mtree_SOURCES) $(nix_build_SOURCES) \
+	$(nix_channel_SOURCES) $(nix_collect_garbage_SOURCES) \
+	$(nix_copy_closure_SOURCES) $(nix_env_SOURCES) \
+	$(nix_hash_SOURCES) $(nix_install_package_SOURCES) \
+	$(nix_instantiate_SOURCES) $(nix_log2xml_SOURCES) \
+	$(nix_prefetch_url_SOURCES) $(nix_pull_SOURCES) \
+	$(nix_push_SOURCES) $(nix_store_SOURCES) $(nix_worker_SOURCES) \
+	$(rpm2cpio_SOURCES) $(rpmcache_SOURCES) $(rpmcmp_SOURCES) \
+	$(rpmdeps_SOURCES) $(rpmdigest_SOURCES) $(rpmkey_SOURCES) \
+	$(rpmrepo_SOURCES) $(rpmspecdump_SOURCES) $(sandbox_SOURCES) \
+	$(semodule_SOURCES) $(spooktool_SOURCES) $(sqlite3_SOURCES) \
+	$(am__txar_SOURCES_DIST) $(wget_SOURCES) $(xiu_echo_SOURCES) \
+	$(xiu_hash_SOURCES) $(xiu_instantiate_SOURCES) \
+	$(xiu_store_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -657,10 +664,6 @@ WITH_GPSEE_CPPFLAGS = @WITH_GPSEE_CPPFLAGS@
 WITH_GPSEE_LDFLAGS = @WITH_GPSEE_LDFLAGS@
 WITH_GPSEE_LIBS = @WITH_GPSEE_LIBS@
 WITH_GPSEE_SUBDIR = @WITH_GPSEE_SUBDIR@
-WITH_JS = @WITH_JS@
-WITH_JS_CPPFLAGS = @WITH_JS_CPPFLAGS@
-WITH_JS_LDFLAGS = @WITH_JS_LDFLAGS@
-WITH_JS_LIBS = @WITH_JS_LIBS@
 WITH_JS_SUBDIR = @WITH_JS_SUBDIR@
 WITH_KEYUTILS = @WITH_KEYUTILS@
 WITH_KEYUTILS_RPMKEY = @WITH_KEYUTILS_RPMKEY@
@@ -673,6 +676,11 @@ WITH_LUA_LIBS = @WITH_LUA_LIBS@
 WITH_LUA_SUBDIR = @WITH_LUA_SUBDIR@
 WITH_LUA_SUBDIR_DEF = @WITH_LUA_SUBDIR_DEF@
 WITH_LUA_SUBDIR_LIB = @WITH_LUA_SUBDIR_LIB@
+WITH_MOZJS185 = @WITH_MOZJS185@
+WITH_MOZJS185_CPPFLAGS = @WITH_MOZJS185_CPPFLAGS@
+WITH_MOZJS185_LDFLAGS = @WITH_MOZJS185_LDFLAGS@
+WITH_MOZJS185_LIBS = @WITH_MOZJS185_LIBS@
+WITH_MOZJS185_SUBDIR = @WITH_MOZJS185_SUBDIR@
 WITH_NEON = @WITH_NEON@
 WITH_NEON_CPPFLAGS = @WITH_NEON_CPPFLAGS@
 WITH_NEON_LDFLAGS = @WITH_NEON_LDFLAGS@
@@ -782,6 +790,7 @@ __FILE = @__FILE@
 __GIT = @__GIT@
 __GPG = @__GPG@
 __GSR = @__GSR@
+__GST_INSPECT = @__GST_INSPECT@
 __GZIP = @__GZIP@
 __HG = @__HG@
 __ID = @__ID@
@@ -796,6 +805,7 @@ __LZOP = @__LZOP@
 __MAKE = @__MAKE@
 __MKDIR = @__MKDIR@
 __MKDIR_P = @__MKDIR_P@
+__MODINFO = @__MODINFO@
 __MONGO = @__MONGO@
 __MV = @__MV@
 __NM = @__NM@
@@ -945,6 +955,9 @@ cudftool_SOURCES = cudftool.c
 cudftool_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(shell pkg-config --cflags glib-2.0)
 cudftool_LDFLAGS = @LDFLAGS_STATIC@ $(LDFLAGS) $(shell pkg-config --libs glib-2.0)
 cudftool_LDADD = $(RPMIO_LDADD_COMMON)
+dbconvert_SOURCES = dbconvert.c
+dbconvert_LDFLAGS = @LDFLAGS_STATIC@ $(LDFLAGS)
+dbconvert_LDADD = $(RPM_LDADD_COMMON)
 debugedit_SOURCES = debugedit.c hashtab.c
 debugedit_LDFLAGS = @LDFLAGS_STATIC@ $(LDFLAGS)
 debugedit_LDADD = $(RPM_LDADD_COMMON)
@@ -1194,6 +1207,9 @@ cp$(EXEEXT): $(cp_OBJECTS) $(cp_DEPENDENCIES)
 cudftool$(EXEEXT): $(cudftool_OBJECTS) $(cudftool_DEPENDENCIES) 
 	@rm -f cudftool$(EXEEXT)
 	$(cudftool_LINK) $(cudftool_OBJECTS) $(cudftool_LDADD) $(LIBS)
+dbconvert$(EXEEXT): $(dbconvert_OBJECTS) $(dbconvert_DEPENDENCIES) 
+	@rm -f dbconvert$(EXEEXT)
+	$(dbconvert_LINK) $(dbconvert_OBJECTS) $(dbconvert_LDADD) $(LIBS)
 dbsql$(EXEEXT): $(dbsql_OBJECTS) $(dbsql_DEPENDENCIES) 
 	@rm -f dbsql$(EXEEXT)
 	$(dbsql_LINK) $(dbsql_OBJECTS) $(dbsql_LDADD) $(LIBS)
@@ -1316,6 +1332,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chroot.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cudftool-cudftool.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dbconvert.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dbsql.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debugedit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dotgraph.Po@am__quote@

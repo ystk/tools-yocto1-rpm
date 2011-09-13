@@ -215,12 +215,12 @@ expandMacroTable(MacroContext mc)
     if (mc->macroTable == NULL) {
 	mc->macrosAllocated = MACRO_CHUNK_SIZE;
 	mc->macroTable = (MacroEntry *)
-	    xmalloc(sizeof(*(mc->macroTable)) * mc->macrosAllocated);
+	    xmalloc(sizeof(*mc->macroTable) * mc->macrosAllocated);
 	mc->firstFree = 0;
     } else {
 	mc->macrosAllocated += MACRO_CHUNK_SIZE;
 	mc->macroTable = (MacroEntry *)
-	    xrealloc(mc->macroTable, sizeof(*(mc->macroTable)) *
+	    xrealloc(mc->macroTable, sizeof(*mc->macroTable) *
 			mc->macrosAllocated);
     }
     memset(&mc->macroTable[mc->firstFree], 0, MACRO_CHUNK_SIZE * sizeof(*(mc->macroTable)));
@@ -2531,10 +2531,11 @@ fprintf(stderr, "*** rpmGlob argv[%d] \"%s\"\n", argc, argv[argc]);
 	case URL_IS_DASH:
 	    strncpy(globRoot, av[j], nb);
 	    /*@switchbreak@*/ break;
-	case URL_IS_HTTPS:
-	case URL_IS_HTTP:
-	case URL_IS_FTP:
 	case URL_IS_HKP:
+	case URL_IS_FTP:
+	case URL_IS_HTTP:
+	case URL_IS_HTTPS:
+	case URL_IS_MONGO:	/* XXX FIXME */
 	case URL_IS_UNKNOWN:
 	default:
 	    /*@switchbreak@*/ break;
@@ -3282,7 +3283,7 @@ rpmGetPath(const char *path, ...)
 	buf[nb] = '\0';
     }
 
-    return xstrdup(buf);	/* XXX xstrdup has side effects. */
+    return DRD_xstrdup(buf);	/* XXX xstrdup has side effects. */
 }
 
 /* Merge 3 args into path, any or all of which may be a url. */

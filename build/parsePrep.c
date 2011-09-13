@@ -133,6 +133,7 @@ static char *doPatch(Spec spec, rpmuint32_t c, int strip, const char *db,
     case URL_IS_HTTP:	/* XXX WRONG WRONG WRONG */
     case URL_IS_FTP:	/* XXX WRONG WRONG WRONG */
     case URL_IS_HKP:	/* XXX WRONG WRONG WRONG */
+    case URL_IS_MONGO:	/* XXX FIXME */
     case URL_IS_PATH:
     case URL_IS_UNKNOWN:
 	break;
@@ -236,7 +237,7 @@ static const char *doUntar(Spec spec, rpmuint32_t c, int quietly)
 	return NULL;
     }
 
-    t = rindex(sp->source, '.');
+    t = strrchr(sp->source, '.');
     if(t && !strcasecmp(t, ".gem"))
 	rubygem = 1;
 
@@ -269,6 +270,7 @@ static const char *doUntar(Spec spec, rpmuint32_t c, int quietly)
     case URL_IS_HTTP:	/* XXX WRONG WRONG WRONG */
     case URL_IS_FTP:	/* XXX WRONG WRONG WRONG */
     case URL_IS_HKP:	/* XXX WRONG WRONG WRONG */
+    case URL_IS_MONGO:	/* XXX FIXME */
     case URL_IS_PATH:
     case URL_IS_UNKNOWN:
 	break;
@@ -491,7 +493,7 @@ static int doSetupMacro(Spec spec, const char * line)
 	    }
 	}
 	if (sp != NULL) {
-	    char *t = rindex(sp->source, '.');
+	    char *t = strrchr(sp->source, '.');
 	    if(t && !strcasecmp(t, ".gem"))
 		createDir = 1;
 	}

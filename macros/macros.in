@@ -1,7 +1,7 @@
 #/*! \page config_macros Default configuration: @USRLIBRPM@/macros
 # \verbatim
 #
-# $Id: macros.in,v 1.39.2.3 2010/12/25 19:11:06 jbj Exp $
+# $Id: macros.in,v 1.39.2.12 2011/04/11 00:34:48 jbj Exp $
 #
 # This is a global RPM configuration file. All changes made here will
 # be lost when the rpm package is upgraded. Any per-system configuration
@@ -265,6 +265,19 @@ package or when debugging this package.\
 #%_pgp_name
 #%_pgp_path
 
+#	Elements necessary to construct a mongodb:// URI configurably
+#
+%__mongodb_user		luser
+%__mongodb_password	%{nil}
+%__mongodb_host		tempest.mongohq.com
+%__mongodb_port		10017
+%__mongodb_database	cooker
+%_mongodb mongodb://%{__mongodb_user}:%{__mongodb_password}@%{__mongodb_host}:%{__mongodb_port}/%{__mongodb_database}
+
+#	Macros used for mongo shell import spewage templating
+#	XXX non-functional atm, /usr/lib/rpm/qf *.mongo templates for now.
+%__mongodb_collection	packages
+
 #==============================================================================
 # ---- Build configuration macros.
 #
@@ -294,11 +307,10 @@ $_arbitrary_tags_tests	Foo:Bar
 # are writing an rpm installer, you shouldn't have to touch *any* of these
 # parameters.
 #
-#   token	works?	Berkeley db flag or value
-#==================================================
 
 # Use Berkeley DB transaction logging for rpmdb ACID behavior.
-%__dbi_txn      create lock log mpool txn auto_commit thread thread_count=64
+# XXX the %{?__nofsync} is passed from the --nofsync popt alias on the rpm cli.
+%__dbi_txn      create %{?__nofsync:nofsync} lock log mpool txn auto_commit thread thread_count=64
 
 %__dbi_other			%{?_tmppath:tmpdir=%{_tmppath}} %{?__dbi_txn}
 
@@ -326,7 +338,7 @@ $_arbitrary_tags_tests	Foo:Bar
 # database configuration: SQLite
 %__dbi_sqlconfig		perms=0644 %{?_tmppath:tmpdir=%{_tmppath}}
 
-%_dbi_sqlconfig			%{__dbi_sql_config}
+%_dbi_sqlconfig			%{__dbi_sqlconfig}
 
 # database tag configuration
 %_dbi_tags                      %{expand:%%{_dbi_tags_%{_dbapi_used}}}
@@ -865,8 +877,9 @@ $_arbitrary_tags_tests	Foo:Bar
 %_mandir		%{_datarootdir}/man
 %_localedir		%{_datarootdir}/locale
 %_lispdir		%{_datarootdir}/emacs/site-lisp
-
-%_initrddir		%{_sysconfdir}/rc.d/init.d
+%_initddir              %{_sysconfdir}/rc.d/init.d
+# This is a deprecated misspelling, present for backwards compatibility.
+%_initrddir             %{_initddir}
 
 #---------------------------------------------------------------------
 #   Multilibs
@@ -948,6 +961,10 @@ $_arbitrary_tags_tests	Foo:Bar
 #------------------------------------------------------------------------
 # cmake(...) configuration
 %{load:%{_usrlibrpm}/macros.d/cmake}
+
+#------------------------------------------------------------------------
+# gstreamer(...) configuration.
+%{load:%{_usrlibrpm}/macros.d/gstreamer}
 
 #------------------------------------------------------------------------
 # perl(...) configuration

@@ -1,3 +1,8 @@
+%distribution		Mandriva Linux
+%vendor			Mandriva
+%bugurl			http://qa.mandriva.com
+%disturl		http://mandriva.org
+
 # This macro will disable the transaction lock on /var/lib/rpm/__db.*.
 # This lock is of no use to us and will also result in errors when trying to
 # install src.rpms as regular user.
@@ -14,7 +19,7 @@
 %_buildrootdir          %{_topdir}/BUILDROOT
 
 # Build root path, where %install installs the package during build.
-%buildroot              %{_buildrootdir}/%{name}-%{version}-%{release}%{?disttag:-%{disttag}%{?distepoch:%{distepoch}}}.%{_arch}-buildroot
+%buildroot              %{_buildrootdir}/%{name}-%{version}-%{release}%{?disttag:-%{disttag}%{?distepoch:%{distepoch}}}.%{_target_cpu}-buildroot
 
 # Path to top of build area.
 %_topdir                %(echo $HOME)/rpmbuild
@@ -26,12 +31,13 @@
 # This will die as soon as remaining usage has been phased out...
 %mkrel(c:)		%{-c: 0.%{-c*}.}%{1}%{?subrel:.%subrel}
 %manbo_mkrel()		%mkrel
+%multiarch()		%{1}
 
 # This will enable the use of distepoch and disttag in stead of polluting
 # %release with such.
 %evr_tuple_select	1234
 %evr_tuple_order	EVRD
-%disttag		mdv
+%disttag		%{!?distsuffix:mdv}%{?distsuffix}
 %distepoch		%(sed -e 's#.*release\\ \\(\\S*\\).*#\\1#' /etc/release)
 
 # Dynamic EVRD tags macro for use with versioned provides/requires in place of
@@ -46,10 +52,8 @@ Provides: %{1} = %{EVRD}
 %_default_patch_flags	-s -U
 %_default_patch_fuzz	0
 
-# FIXME: will break if spec file is ever differently named, shouldn't parse
-# the spec file itself...
 %apply_patches %{lua:\
-f = io.open(rpm.expand("%{_specdir}/%{name}.spec"))\
+f = io.open(rpm.expand("%{_specfile}"))\
 if f then\
   for l in f:lines() do\
     match,b,num = string.find(string.lower(l), "^%s*patch(%d+)%s*:.*$")\
@@ -63,7 +67,49 @@ end\
 %make			%{__make} %{_smp_mflags}
 %makeinstall_std	make DESTDIR=%{?buildroot:%{buildroot}} install
 
+# mdvbz#62322
+%__grep			/bin/grep
+%__gzip			/bin/gzip
+%__lua			%{_bindir}/lua
+%__rc			%{_bindir}/rc
+%__xar			%{_bindir}/xar
+
 # mdvbz#61851
 %__tar_wildcards   --wildcards
+
+%_loop_detection_loglevel 3
+
+# mdvbz#62741
+# standard systemd directories
+%_systemdrootdir	/lib/systemd
+%_systemunitdir		%{_systemdrootdir}/system
+%_systemgeneratordir	%{_systemdrootdir}/system-generators
+%_systemshutdowndir	%{_systemdrootdir}/system-shutdown
+
+%_systemddatadir	%{_datadir}/systemd
+%_userunitdir		%{_systemddatadir}/user
+
+%_systemdlibexecdir	%{_libexecdir}/systemd
+%_usergeneratordir	%{_systemdlibexecdir}/user-generators
+
+%_systemdconfdir	%{_sysconfdir}/systemd
+
+#
+# multiarch is used to deal with situations where headers that contain
+# ie. architecture specific parts to solve file conflicts between
+# packages of different archs in multilib environments.
+#
+# Note: more details at http://wiki.mandriva.com/en/Policies/Multiarch
+%multiarch_platform		multiarch-%{_arch}-%{_target_os}
+%multiarch_bindir		%{_bindir}/%{multiarch_platform}
+%multiarch_includedir		%{_includedir}/%{multiarch_platform}
+%multiarch_binaries()		%{_rpmhome}/mkmultiarch binaries %{1}
+%multiarch_includes()		%{_rpmhome}/mkmultiarch includes %{1}
+
+# Check for need of multiarch, terminate build if needed and not used.
+#
+# Note: The default value should be 0 for legacy compatibility.
+# TODO: fix check script and implement support for using
+#%_multiarch_required_terminate_build	1
 
 %{load:/etc/rpm/macros.d/*.macros}

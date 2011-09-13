@@ -513,6 +513,32 @@ assert(EVR != NULL);
 
 	    ds = rpmdsSingle(tagN, N, EVR, Flags);
 
+#if defined(RPM_VENDOR_MANDRIVA) /* filter-overlapping-dependencies */
+	    int overlap = 0;
+	    if (*depsp) {
+		int ix = rpmdsSearch(*depsp, ds);
+		if (ix >= 0) {
+		    EVR_t lEVR = rpmEVRnew(RPMSENSE_ANY, 0),
+			  rEVR = rpmEVRnew(RPMSENSE_ANY, 0);
+
+		    rpmdsSetIx(*depsp, ix);
+
+		    rpmEVRparse(rpmdsEVR(*depsp), lEVR);
+		    rpmEVRparse(EVR, rEVR);
+		    lEVR->Flags = rpmdsFlags(*depsp) | RPMSENSE_EQUAL;
+		    rEVR->Flags = Flags | RPMSENSE_EQUAL;
+
+		    if (rpmEVRcompare(lEVR, rEVR) < 0) {
+			(*depsp)->EVR[(*depsp)->i] = EVR;
+			(*depsp)->Flags[(*depsp)->i] = Flags;
+			overlap = 1;
+		    }
+		    lEVR = rpmEVRfree(lEVR);
+		    rEVR = rpmEVRfree(rEVR);
+		}
+	    }
+	    if (!overlap)
+#endif
 	    /* Add to package dependencies. */
 	    xx = rpmdsMerge(depsp, ds);
 
@@ -575,6 +601,9 @@ static struct rpmfcTokens_s rpmfcTokens[] = {
   { "Java ",			RPMFC_JAVA|RPMFC_INCLUDE },
 
   { "Mono/.Net assembly",	RPMFC_MONO|RPMFC_INCLUDE },
+
+  { "ruby script text",		RPMFC_RUBY|RPMFC_INCLUDE },
+  { "Ruby script text",		RPMFC_RUBY|RPMFC_INCLUDE },
 
   { "current ar archive",	RPMFC_STATIC|RPMFC_LIBRARY|RPMFC_ARCHIVE|RPMFC_INCLUDE },
 
@@ -810,6 +839,8 @@ static int rpmfcSCRIPT(rpmfc fc)
 	    fc->fcolor->vals[fc->ix] |= RPMFC_PYTHON;
 	else if (!strncmp(bn, "php", sizeof("php")-1))
 	    fc->fcolor->vals[fc->ix] |= RPMFC_PHP;
+	else if (!strncmp(bn, "ruby", sizeof("ruby")-1))
+	    fc->fcolor->vals[fc->ix] |= RPMFC_RUBY;
 
 	break;
     }
@@ -865,7 +896,21 @@ static int rpmfcSCRIPT(rpmfc fc)
 	xx = rpmfcHelper(fc, 'P', "mono");
 	if (is_executable)
 	    xx = rpmfcHelper(fc, 'R', "mono");
+    } else
+    if (fc->fcolor->vals[fc->ix] & RPMFC_RUBY) {
+	xx = rpmfcHelper(fc, 'P', "ruby");
+#ifdef	NOTYET
+	if (is_executable)
+#endif
+	    xx = rpmfcHelper(fc, 'R', "ruby");
+    } else
+    if ((fc->fcolor->vals[fc->ix] & (RPMFC_MODULE|RPMFC_LIBRARY)) &&
+	    strstr(fn, "/gstreamer")) {
+	xx = rpmfcHelper(fc, 'P', "gstreamer");
+	/* XXX: currently of no use, but for the sake of consistency... */
+	xx = rpmfcHelper(fc, 'R', "gstreamer");
     }
+
 /*@-observertrans@*/
     defaultdocdir = _free(defaultdocdir) ;
 /*@=observertrans@*/
@@ -942,6 +987,37 @@ static int rpmfcELF(rpmfc fc)
     return rpmdsELF(fn, flags, rpmfcMergePR, fc);
 }
 
+#if defined(RPM_VENDOR_MANDRIVA)
+/** \ingroup rpmds
+ * Extract dependencies from a symlink.
+ * XXX Prototype added to keep GCC quite and avoid adding a symbol.
+ * @param fn		file name
+ * @param flags		1: skip provides 2: skip requires
+ * @param *add		add(arg, ds) saves next provide/require symlink dependency.
+ * @param context	add() callback context
+ * @return		0 on success
+ */
+extern int rpmdsSymlink(const char * fn, int flags,
+		int (*add) (void * context, rpmds ds), void * context)
+	/*@globals rpmGlobalMacroContext, h_errno, fileSystem, internalState @*/
+	/*@modifies rpmGlobalMacroContext, fileSystem, internalState @*/;
+
+static int rpmfcSYMLINK(rpmfc fc)
+	/*@globals rpmGlobalMacroContext, h_errno, fileSystem, internalState @*/
+	/*@modifies rpmGlobalMacroContext, fileSystem, internalState @*/
+{
+    const char * fn = fc->fn[fc->ix];
+    int flags = 0;
+
+    if (fc->skipProv)
+	flags |= RPMELF_FLAG_SKIPPROVIDES;
+    if (fc->skipReq)
+	flags |= RPMELF_FLAG_SKIPREQUIRES;
+
+    return rpmdsSymlink(fn, flags, rpmfcMergePR, fc);
+}
+#endif	/* RPM_VENDOR_MANDRIVA */
+
 typedef struct rpmfcApplyTbl_s {
     int (*func) (rpmfc fc);
     int colormask;
@@ -955,6 +1031,9 @@ typedef struct rpmfcApplyTbl_s {
 static struct rpmfcApplyTbl_s rpmfcApplyTable[] = {
     { rpmfcELF,		RPMFC_ELF },
     { rpmfcSCRIPT,	(RPMFC_SCRIPT|RPMFC_PERL|RPMFC_PYTHON|RPMFC_LIBTOOL|RPMFC_PKGCONFIG|RPMFC_BOURNE|RPMFC_JAVA|RPMFC_PHP|RPMFC_MONO) },
+#if defined(RPM_VENDOR_MANDRIVA)
+    { rpmfcSYMLINK,	RPMFC_SYMLINK },
+#endif
     { NULL, 0 }
 };
 /*@=nullassign@*/
@@ -1022,6 +1101,16 @@ assert(fc->fn != NULL);
 		    fn += 2;
 		if (!strncmp(fn, "/python", sizeof("/python")-1))
 		    fc->fcolor->vals[fc->ix] |= RPMFC_PYTHON;
+		else if (!strncmp(fn, "/ruby", sizeof("/ruby")-1)) {
+		    fc->fcolor->vals[fc->ix] |= RPMFC_RUBY;
+		    if ((fn = strstr(fn, "/specifications/")) &&
+			(fn = strrchr(fn, '.')) && !strcmp(fn, ".gemspec"))
+			fc->fcolor->vals[fc->ix] |= RPMFC_MODULE;
+		}
+		/* XXX: lacking better, more generic classifier... */
+		else if (!strncmp(fn, "/gstreamer", sizeof("/gstreamer")-1) &&
+			fc->fcolor->vals[fc->ix] & RPMFC_LIBRARY)
+		    fc->fcolor->vals[fc->ix] |= (RPMFC_MODULE|RPMFC_SCRIPT);
 	    }
 	}
 

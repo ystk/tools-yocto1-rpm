@@ -49,17 +49,19 @@ DIST_COMMON = README $(am__configure_deps) $(noinst_HEADERS) \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(srcdir)/rpm.spec.in $(srcdir)/rpmpopt.in \
 	$(top_srcdir)/configure $(top_srcdir)/macros/cmake.in \
-	$(top_srcdir)/macros/java.in $(top_srcdir)/macros/libtool.in \
+	$(top_srcdir)/macros/fedora.in \
+	$(top_srcdir)/macros/gstreamer.in $(top_srcdir)/macros/java.in \
+	$(top_srcdir)/macros/kernel.in $(top_srcdir)/macros/libtool.in \
 	$(top_srcdir)/macros/macros.in \
 	$(top_srcdir)/macros/macros.rpmbuild.in \
 	$(top_srcdir)/macros/mandriva.in $(top_srcdir)/macros/mono.in \
 	$(top_srcdir)/macros/perl.in $(top_srcdir)/macros/php.in \
 	$(top_srcdir)/macros/pkgconfig.in \
 	$(top_srcdir)/macros/python.in $(top_srcdir)/macros/ruby.in \
-	$(top_srcdir)/macros/selinux.in $(top_srcdir)/macros/tcl.in \
-	ABOUT-NLS COPYING.LIB INSTALL NEWS TODO config.guess \
-	config.rpath config.sub depcomp install-sh ltmain.sh missing \
-	mkinstalldirs
+	$(top_srcdir)/macros/selinux.in $(top_srcdir)/macros/suse.in \
+	$(top_srcdir)/macros/tcl.in ABOUT-NLS COPYING.LIB INSTALL NEWS \
+	TODO config.guess config.rpath config.sub depcomp install-sh \
+	ltmain.sh missing mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -77,9 +79,11 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES = Doxyfile rpmpopt rpm.spec macros/macros \
-	macros/macros.rpmbuild macros/cmake macros/java macros/libtool \
-	macros/mandriva macros/mono macros/perl macros/pkgconfig \
-	macros/php macros/python macros/ruby macros/selinux macros/tcl
+	macros/macros.rpmbuild macros/cmake macros/gstreamer \
+	macros/java macros/kernel macros/libtool macros/mandriva \
+	macros/suse macros/fedora macros/mono macros/perl \
+	macros/pkgconfig macros/php macros/python macros/ruby \
+	macros/selinux macros/tcl
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgbindir)" \
 	"$(DESTDIR)$(pkgcfgdir)" "$(DESTDIR)$(pkglibdir)"
@@ -380,10 +384,6 @@ WITH_GPSEE_CPPFLAGS = @WITH_GPSEE_CPPFLAGS@
 WITH_GPSEE_LDFLAGS = @WITH_GPSEE_LDFLAGS@
 WITH_GPSEE_LIBS = @WITH_GPSEE_LIBS@
 WITH_GPSEE_SUBDIR = @WITH_GPSEE_SUBDIR@
-WITH_JS = @WITH_JS@
-WITH_JS_CPPFLAGS = @WITH_JS_CPPFLAGS@
-WITH_JS_LDFLAGS = @WITH_JS_LDFLAGS@
-WITH_JS_LIBS = @WITH_JS_LIBS@
 WITH_JS_SUBDIR = @WITH_JS_SUBDIR@
 WITH_KEYUTILS = @WITH_KEYUTILS@
 WITH_KEYUTILS_RPMKEY = @WITH_KEYUTILS_RPMKEY@
@@ -396,6 +396,11 @@ WITH_LUA_LIBS = @WITH_LUA_LIBS@
 WITH_LUA_SUBDIR = @WITH_LUA_SUBDIR@
 WITH_LUA_SUBDIR_DEF = @WITH_LUA_SUBDIR_DEF@
 WITH_LUA_SUBDIR_LIB = @WITH_LUA_SUBDIR_LIB@
+WITH_MOZJS185 = @WITH_MOZJS185@
+WITH_MOZJS185_CPPFLAGS = @WITH_MOZJS185_CPPFLAGS@
+WITH_MOZJS185_LDFLAGS = @WITH_MOZJS185_LDFLAGS@
+WITH_MOZJS185_LIBS = @WITH_MOZJS185_LIBS@
+WITH_MOZJS185_SUBDIR = @WITH_MOZJS185_SUBDIR@
 WITH_NEON = @WITH_NEON@
 WITH_NEON_CPPFLAGS = @WITH_NEON_CPPFLAGS@
 WITH_NEON_LDFLAGS = @WITH_NEON_LDFLAGS@
@@ -505,6 +510,7 @@ __FILE = @__FILE@
 __GIT = @__GIT@
 __GPG = @__GPG@
 __GSR = @__GSR@
+__GST_INSPECT = @__GST_INSPECT@
 __GZIP = @__GZIP@
 __HG = @__HG@
 __ID = @__ID@
@@ -519,6 +525,7 @@ __LZOP = @__LZOP@
 __MAKE = @__MAKE@
 __MKDIR = @__MKDIR@
 __MKDIR_P = @__MKDIR_P@
+__MODINFO = @__MODINFO@
 __MONGO = @__MONGO@
 __MV = @__MV@
 __NM = @__NM@
@@ -633,6 +640,7 @@ EXTRA_DIST = CHANGES CREDITS Doxyheader INSTALL INSTALL.developer cpuinfo.yaml \
 	tests/devtool-sanity-1.0-1.src.rpm \
 	tests/edos-test-1-0.src.rpm \
 	tests/probes-test-1-0.src.rpm \
+	tests/simplestRPMv3-1.0-2.aix5.3.noarch.rpm \
 	tests/triggers-D-1.0-1.src.rpm \
 	tests/triggers-DP-1.0-1.src.rpm \
 	tests/triggers-F-1.0-1.src.rpm \
@@ -682,9 +690,9 @@ pkgbindir = $(pkglibdir)/bin
 pkgbin_SCRIPTS = install-sh mkinstalldirs
 pkgcfgdir = $(pkglibdir)/macros.d
 pkgcfg_DATA = \
-	macros/cmake macros/java macros/libtool macros/mandriva macros/mono \
-	macros/perl macros/pkgconfig macros/php macros/python macros/ruby \
-	macros/selinux macros/tcl
+	macros/cmake macros/gstreamer macros/java macros/kernel macros/libtool \
+	macros/mandriva macros/mono macros/perl macros/pkgconfig macros/php \
+	macros/python macros/ruby macros/selinux macros/tcl
 
 noinst_HEADERS = build.h debug.h system.h
 rpm_SOURCES = $(top_srcdir)/build.c
@@ -763,11 +771,19 @@ macros/macros.rpmbuild: $(top_builddir)/config.status $(top_srcdir)/macros/macro
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 macros/cmake: $(top_builddir)/config.status $(top_srcdir)/macros/cmake.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
+macros/gstreamer: $(top_builddir)/config.status $(top_srcdir)/macros/gstreamer.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 macros/java: $(top_builddir)/config.status $(top_srcdir)/macros/java.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+macros/kernel: $(top_builddir)/config.status $(top_srcdir)/macros/kernel.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 macros/libtool: $(top_builddir)/config.status $(top_srcdir)/macros/libtool.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 macros/mandriva: $(top_builddir)/config.status $(top_srcdir)/macros/mandriva.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+macros/suse: $(top_builddir)/config.status $(top_srcdir)/macros/suse.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+macros/fedora: $(top_builddir)/config.status $(top_srcdir)/macros/fedora.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 macros/mono: $(top_builddir)/config.status $(top_srcdir)/macros/mono.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@

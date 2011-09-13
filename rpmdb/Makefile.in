@@ -21,6 +21,7 @@
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
 pkglibexecdir = $(libexecdir)/@PACKAGE@
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
@@ -86,9 +87,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(usrlibdir)" \
-	"$(DESTDIR)$(pkgincdir)"
-LTLIBRARIES = $(pkglib_LTLIBRARIES) $(usrlib_LTLIBRARIES)
+am__installdirs = "$(DESTDIR)$(usrlibdir)" "$(DESTDIR)$(pkgincdir)"
+LTLIBRARIES = $(usrlib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 @ENABLE_BUILD_MAXEXTLIBDEP_TRUE@am__DEPENDENCIES_2 =  \
 @ENABLE_BUILD_MAXEXTLIBDEP_TRUE@	$(am__DEPENDENCIES_1)
@@ -109,12 +109,6 @@ librpmdb_la_OBJECTS = $(am_librpmdb_la_OBJECTS)
 librpmdb_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(librpmdb_la_LDFLAGS) $(LDFLAGS) -o $@
-am__DEPENDENCIES_3 = $(top_builddir)/misc/librpmmisc.la
-am__DEPENDENCIES_4 = $(top_builddir)/rpmio/librpmio.la \
-	$(am__DEPENDENCIES_3)
-libsqldb_la_DEPENDENCIES = $(am__DEPENDENCIES_4)
-am_libsqldb_la_OBJECTS = libsqldb.lo
-libsqldb_la_OBJECTS = $(am_libsqldb_la_OBJECTS)
 am_logio_OBJECTS = logio.$(OBJEXT)
 logio_OBJECTS = $(am_logio_OBJECTS)
 logio_DEPENDENCIES = $(mylibs)
@@ -134,10 +128,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(librpmdb_la_SOURCES) $(libsqldb_la_SOURCES) \
-	$(logio_SOURCES) $(tjfn_SOURCES)
-DIST_SOURCES = $(librpmdb_la_SOURCES) $(libsqldb_la_SOURCES) \
-	$(logio_SOURCES) $(tjfn_SOURCES)
+SOURCES = $(librpmdb_la_SOURCES) $(logio_SOURCES) $(tjfn_SOURCES)
+DIST_SOURCES = $(librpmdb_la_SOURCES) $(logio_SOURCES) $(tjfn_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -180,7 +172,6 @@ am__relativize = \
     dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
   done; \
   reldir="$$dir2"
-pkglibdir = @USRLIBRPM@
 ACLOCAL = @ACLOCAL@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
@@ -361,10 +352,6 @@ WITH_GPSEE_CPPFLAGS = @WITH_GPSEE_CPPFLAGS@
 WITH_GPSEE_LDFLAGS = @WITH_GPSEE_LDFLAGS@
 WITH_GPSEE_LIBS = @WITH_GPSEE_LIBS@
 WITH_GPSEE_SUBDIR = @WITH_GPSEE_SUBDIR@
-WITH_JS = @WITH_JS@
-WITH_JS_CPPFLAGS = @WITH_JS_CPPFLAGS@
-WITH_JS_LDFLAGS = @WITH_JS_LDFLAGS@
-WITH_JS_LIBS = @WITH_JS_LIBS@
 WITH_JS_SUBDIR = @WITH_JS_SUBDIR@
 WITH_KEYUTILS = @WITH_KEYUTILS@
 WITH_KEYUTILS_RPMKEY = @WITH_KEYUTILS_RPMKEY@
@@ -377,6 +364,11 @@ WITH_LUA_LIBS = @WITH_LUA_LIBS@
 WITH_LUA_SUBDIR = @WITH_LUA_SUBDIR@
 WITH_LUA_SUBDIR_DEF = @WITH_LUA_SUBDIR_DEF@
 WITH_LUA_SUBDIR_LIB = @WITH_LUA_SUBDIR_LIB@
+WITH_MOZJS185 = @WITH_MOZJS185@
+WITH_MOZJS185_CPPFLAGS = @WITH_MOZJS185_CPPFLAGS@
+WITH_MOZJS185_LDFLAGS = @WITH_MOZJS185_LDFLAGS@
+WITH_MOZJS185_LIBS = @WITH_MOZJS185_LIBS@
+WITH_MOZJS185_SUBDIR = @WITH_MOZJS185_SUBDIR@
 WITH_NEON = @WITH_NEON@
 WITH_NEON_CPPFLAGS = @WITH_NEON_CPPFLAGS@
 WITH_NEON_LDFLAGS = @WITH_NEON_LDFLAGS@
@@ -486,6 +478,7 @@ __FILE = @__FILE@
 __GIT = @__GIT@
 __GPG = @__GPG@
 __GSR = @__GSR@
+__GST_INSPECT = @__GST_INSPECT@
 __GZIP = @__GZIP@
 __HG = @__HG@
 __ID = @__ID@
@@ -500,6 +493,7 @@ __LZOP = @__LZOP@
 __MAKE = @__MAKE@
 __MKDIR = @__MKDIR@
 __MKDIR_P = @__MKDIR_P@
+__MODINFO = @__MODINFO@
 __MONGO = @__MONGO@
 __MV = @__MV@
 __NM = @__NM@
@@ -642,7 +636,9 @@ noinst_HEADERS = \
 	fprint.h header_internal.h legacy.h rpmdpkg.h rpmlio.h rpmmdb.h \
 	rpmrepo.h rpmtd.h rpmtxn.h rpmwf.h signature.h
 
-pkglib_LTLIBRARIES = libsqldb.la
+
+#pkglibdir =		@USRLIBRPM@
+#pkglib_LTLIBRARIES =	libsqldb.la
 mylibs = \
 	$(top_builddir)/rpmdb/librpmdb.la \
 	$(top_builddir)/misc/librpmmisc.la
@@ -684,8 +680,9 @@ splint_SRCS = \
 logio_BUILT = logio_auto.c logio_autop.c logio_auto.h logio_template
 logio_SOURCES = logio.c logio.h
 logio_LDADD = $(mylibs)
-libsqldb_la_SOURCES = libsqldb.c # sqlite.c
-libsqldb_la_LIBADD = $(RPMIO_LDADD_COMMON)
+
+#libsqldb_la_SOURCES	= libsqldb.c # sqlite.c
+#libsqldb_la_LIBADD	= $(RPMIO_LDADD_COMMON)
 BUILT_SOURCES = tagtbl.c $(logio_BUILT)
 #BUILT_SOURCES += tbdb.c bdb.c bdb.h
 tjfn_SOURCES = tjfn.c
@@ -727,37 +724,6 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 $(am__aclocal_m4_deps):
 DB_CONFIG: $(top_builddir)/config.status $(srcdir)/DB_CONFIG.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-install-pkglibLTLIBRARIES: $(pkglib_LTLIBRARIES)
-	@$(NORMAL_INSTALL)
-	test -z "$(pkglibdir)" || $(MKDIR_P) "$(DESTDIR)$(pkglibdir)"
-	@list='$(pkglib_LTLIBRARIES)'; test -n "$(pkglibdir)" || list=; \
-	list2=; for p in $$list; do \
-	  if test -f $$p; then \
-	    list2="$$list2 $$p"; \
-	  else :; fi; \
-	done; \
-	test -z "$$list2" || { \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(pkglibdir)'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(pkglibdir)"; \
-	}
-
-uninstall-pkglibLTLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(pkglib_LTLIBRARIES)'; test -n "$(pkglibdir)" || list=; \
-	for p in $$list; do \
-	  $(am__strip_dir) \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(pkglibdir)/$$f'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(pkglibdir)/$$f"; \
-	done
-
-clean-pkglibLTLIBRARIES:
-	-test -z "$(pkglib_LTLIBRARIES)" || rm -f $(pkglib_LTLIBRARIES)
-	@list='$(pkglib_LTLIBRARIES)'; for p in $$list; do \
-	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
-	  test "$$dir" != "$$p" || dir=.; \
-	  echo "rm -f \"$${dir}/so_locations\""; \
-	  rm -f "$${dir}/so_locations"; \
-	done
 install-usrlibLTLIBRARIES: $(usrlib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
 	test -z "$(usrlibdir)" || $(MKDIR_P) "$(DESTDIR)$(usrlibdir)"
@@ -789,8 +755,6 @@ clean-usrlibLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libsqldb.la: $(libsqldb_la_OBJECTS) $(libsqldb_la_DEPENDENCIES) 
-	$(LINK) -rpath $(pkglibdir) $(libsqldb_la_OBJECTS) $(libsqldb_la_LIBADD) $(LIBS)
 logio$(EXEEXT): $(logio_OBJECTS) $(logio_DEPENDENCIES) 
 	@rm -f logio$(EXEEXT)
 	$(LINK) $(logio_OBJECTS) $(logio_LDADD) $(LIBS)
@@ -828,7 +792,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librpmdb_la-signature.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librpmdb_la-tagname.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librpmdb_la-tagtbl.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libsqldb.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/logio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tjfn.Po@am__quote@
 
@@ -1247,7 +1210,7 @@ check: $(BUILT_SOURCES)
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(usrlibdir)" "$(DESTDIR)$(pkgincdir)"; do \
+	for dir in "$(DESTDIR)$(usrlibdir)" "$(DESTDIR)$(pkgincdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1280,7 +1243,7 @@ maintainer-clean-generic:
 clean: clean-recursive
 
 clean-am: clean-generic clean-libtool clean-local \
-	clean-pkglibLTLIBRARIES clean-usrlibLTLIBRARIES mostlyclean-am
+	clean-usrlibLTLIBRARIES mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -rf ./$(DEPDIR)
@@ -1308,7 +1271,7 @@ install-dvi: install-dvi-recursive
 
 install-dvi-am:
 
-install-exec-am: install-pkglibLTLIBRARIES
+install-exec-am:
 
 install-html: install-html-recursive
 
@@ -1348,8 +1311,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-pkgincHEADERS uninstall-pkglibLTLIBRARIES \
-	uninstall-usrlibLTLIBRARIES
+uninstall-am: uninstall-pkgincHEADERS uninstall-usrlibLTLIBRARIES
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) all check \
 	check-am ctags-recursive install install-am install-data-am \
@@ -1357,23 +1319,21 @@ uninstall-am: uninstall-pkgincHEADERS uninstall-pkglibLTLIBRARIES \
 
 .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
 	all all-am check check-am check-local clean clean-generic \
-	clean-libtool clean-local clean-pkglibLTLIBRARIES \
-	clean-usrlibLTLIBRARIES ctags ctags-recursive distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am \
-	install-data-hook install-data-local install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-pkgincHEADERS \
-	install-pkglibLTLIBRARIES install-ps install-ps-am \
-	install-strip install-usrlibLTLIBRARIES installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
+	clean-libtool clean-local clean-usrlibLTLIBRARIES ctags \
+	ctags-recursive distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-data-hook install-data-local \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-pkgincHEADERS \
+	install-ps install-ps-am install-strip \
+	install-usrlibLTLIBRARIES installcheck installcheck-am \
+	installdirs installdirs-am maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-recursive uninstall uninstall-am \
-	uninstall-pkgincHEADERS uninstall-pkglibLTLIBRARIES \
-	uninstall-usrlibLTLIBRARIES
+	uninstall-pkgincHEADERS uninstall-usrlibLTLIBRARIES
 
 librpmdb.la: $(librpmdb_la_OBJECTS) $(librpmdb_la_DEPENDENCIES) 
 	$(librpmdb_la_LINK) -rpath $(usrlibdir) $(librpmdb_la_OBJECTS) $(librpmdb_la_LIBADD)

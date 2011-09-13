@@ -117,7 +117,7 @@ static int getFiletriggers_raw(const char * rootDir, int * nftp,
     if (dn == NULL)
 	goto exit;
 
-    globstr = rpmGetPath(rootDir, dn, "/*" FILTER_EXTENSION, NULL);
+    globstr = rpmGetPath(rootDir ? rootDir : "/", dn, "/*" FILTER_EXTENSION, NULL);
     xx = rpmGlob(globstr, &ac, &av);
     if (ac == 0)
 	goto exit;
@@ -366,6 +366,7 @@ void rpmRunFileTriggers(const char * rootDir)
 
 		mayStartFiletrigger(rootDir, &list[i]);
 		nw = write(list[i].command_pipe, tmp, tmplen);
+		nw = write(list[i].command_pipe, "\n", 1);
 	    }
 	}
 
@@ -386,12 +387,12 @@ void rpmRunFileTriggers(const char * rootDir)
 	    }
 	}
 
-	freeFiletriggers(matches_any, nft, list);
-
 	oldhandler = signal(SIGPIPE, oldhandler);
     }
 
 exit:
+    freeFiletriggers(matches_any, nft, list);
+
     if (fn != NULL)
 	xx = unlink(fn);
     fn = _free(fn);

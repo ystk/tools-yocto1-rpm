@@ -2,14 +2,14 @@
 # To make use of these macros insert the following line into your spec file:
 # %{load:%{_usrlibrpm}/macros.d/ruby}
 
-%__ruby		/usr/lib/rpm/bin/ruby
+%__ruby		%{_bindir}/ruby
 
 # Path to scripts to autogenerate php package dependencies,
 #
 # Note: Used if _use_internal_dependency_generator is non-zero. The
 # helpers are also used by %{_rpmhome}/rpmdeps {--provides|--requires}.
-#%__rubygems_provides	%{_rpmhome}/rubygems.rb --provides
-#%__rubygems_requires	%{_rpmhome}/rubygems.sh --requires
+%__ruby_provides	%{_rpmhome}/rubygems.rb --provides
+%__ruby_requires	%{_rpmhome}/rubygems.rb --requires
 
 %ruby_version		%(%{__ruby} -rrbconfig -e 'print Config::CONFIG["ruby_version"]')
 

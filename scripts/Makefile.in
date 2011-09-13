@@ -18,6 +18,7 @@
 # Makefile for rpm scripts.
 
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -38,8 +39,8 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 subdir = scripts
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/rpm.pc.in
+DIST_COMMON = $(pkginc_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(srcdir)/rpm.pc.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -79,12 +80,16 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkglibdir)" \
 	"$(DESTDIR)$(pkglibbindir)" "$(DESTDIR)$(pkglibhelperdir)" \
-	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkglibqfdir)"
+	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkglibqfdir)" \
+	"$(DESTDIR)$(pkgincdir)"
 SCRIPTS = $(bin_SCRIPTS) $(pkglib_SCRIPTS) $(pkglibbin_SCRIPTS) \
 	$(pkglibhelper_SCRIPTS)
 SOURCES =
 DIST_SOURCES =
 DATA = $(pkgconfig_DATA) $(pkglibqf_DATA)
+HEADERS = $(pkginc_HEADERS)
+ETAGS = etags
+CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 pkglibdir = @USRLIBRPM@
 ACLOCAL = @ACLOCAL@
@@ -267,10 +272,6 @@ WITH_GPSEE_CPPFLAGS = @WITH_GPSEE_CPPFLAGS@
 WITH_GPSEE_LDFLAGS = @WITH_GPSEE_LDFLAGS@
 WITH_GPSEE_LIBS = @WITH_GPSEE_LIBS@
 WITH_GPSEE_SUBDIR = @WITH_GPSEE_SUBDIR@
-WITH_JS = @WITH_JS@
-WITH_JS_CPPFLAGS = @WITH_JS_CPPFLAGS@
-WITH_JS_LDFLAGS = @WITH_JS_LDFLAGS@
-WITH_JS_LIBS = @WITH_JS_LIBS@
 WITH_JS_SUBDIR = @WITH_JS_SUBDIR@
 WITH_KEYUTILS = @WITH_KEYUTILS@
 WITH_KEYUTILS_RPMKEY = @WITH_KEYUTILS_RPMKEY@
@@ -283,6 +284,11 @@ WITH_LUA_LIBS = @WITH_LUA_LIBS@
 WITH_LUA_SUBDIR = @WITH_LUA_SUBDIR@
 WITH_LUA_SUBDIR_DEF = @WITH_LUA_SUBDIR_DEF@
 WITH_LUA_SUBDIR_LIB = @WITH_LUA_SUBDIR_LIB@
+WITH_MOZJS185 = @WITH_MOZJS185@
+WITH_MOZJS185_CPPFLAGS = @WITH_MOZJS185_CPPFLAGS@
+WITH_MOZJS185_LDFLAGS = @WITH_MOZJS185_LDFLAGS@
+WITH_MOZJS185_LIBS = @WITH_MOZJS185_LIBS@
+WITH_MOZJS185_SUBDIR = @WITH_MOZJS185_SUBDIR@
 WITH_NEON = @WITH_NEON@
 WITH_NEON_CPPFLAGS = @WITH_NEON_CPPFLAGS@
 WITH_NEON_LDFLAGS = @WITH_NEON_LDFLAGS@
@@ -392,6 +398,7 @@ __FILE = @__FILE@
 __GIT = @__GIT@
 __GPG = @__GPG@
 __GSR = @__GSR@
+__GST_INSPECT = @__GST_INSPECT@
 __GZIP = @__GZIP@
 __HG = @__HG@
 __ID = @__ID@
@@ -406,6 +413,7 @@ __LZOP = @__LZOP@
 __MAKE = @__MAKE@
 __MKDIR = @__MKDIR@
 __MKDIR_P = @__MKDIR_P@
+__MODINFO = @__MODINFO@
 __MONGO = @__MONGO@
 __MV = @__MV@
 __NM = @__NM@
@@ -515,21 +523,23 @@ EXTRA_DIST = abi-compliance-checker.pl api-sanity-autotest.pl \
 	deb_control deb_md5sums deb_postinst deb_postrm deb_preinst deb_prerm \
 	executabledeps.sh \
 	find-debuginfo.sh find-lang.sh find-prov.pl find-req.pl \
-	find-provides.ksyms find-requires.ksyms kmodtool \
+	find-provides.ksyms find-requires.ksyms kmod-deps.sh kmodtool \
 	cpanflute cpanflute2 Specfile.pm \
 	find-provides.perl find-requires.perl \
 	find-provides.php find-requires.php \
 	freshen.sh gendiff getpo.sh http.req \
 	check-java-closure.sh java.prov.sh java.req.sh \
-	javadeps.sh libtooldeps.sh \
+	gstreamer.sh javadeps.sh libtooldeps.sh mgo \
 	mono-find-provides mono-find-requires \
+	check-multiarch-files multiarch-platform multiarch-dispatch \
+	multiarch-dispatch.h mkmultiarch \
 	nix_meta \
 	osgideps.pl pkgconfigdeps.sh \
-	perldeps.pl perl.prov perl.req pythondeps.sh \
+	perldeps.pl perl.prov perl.req pythondeps.sh pythoneggs.py \
 	php.prov php.req rpm2cpio \
 	rpmdb_loadcvt rpmdiff rpmdiff.cgi \
 	rpm.daily rpm.log rpm.xinetd \
-	rpmsort rt-reloc-wrapper.sh ruby-config symset-table \
+	rpmsort rt-reloc-wrapper.sh ruby-config rubygems.rb symset-table \
 	sql.prov sql.req symclash.py symclash.sh tcl.req tgpg trpm u_pkg.sh \
 	vcheck vpkg-provides.sh vpkg-provides2.sh \
 	wdj_srpm wdj_srpm_mongo \
@@ -541,7 +551,7 @@ EXTRA_DIST = abi-compliance-checker.pl api-sanity-autotest.pl \
 	find-php-provides find-php-requires \
 	${HELPERS}
 
-bin_SCRIPTS = gendiff
+bin_SCRIPTS = gendiff multiarch-dispatch multiarch-platform
 pkglib_SCRIPTS = \
 	brp-compress brp-python-bytecompile brp-java-gcjcompile \
 	brp-strip brp-strip-comment-note brp-nobuildrootpath \
@@ -552,16 +562,18 @@ pkglib_SCRIPTS = \
 	find-requires.perl getpo.sh http.req \
 	javadeps.sh libtooldeps.sh \
 	mono-find-provides mono-find-requires \
+	check-multiarch-files mkmultiarch \
 	osgideps.pl pkgconfigdeps.sh \
-	perldeps.pl perl.prov perl.req pythondeps.sh \
+	perldeps.pl perl.prov perl.req pythondeps.sh pythoneggs.py \
 	php.prov php.req \
 	rpm2cpio rpmdb_loadcvt \
 	rpm.daily rpm.log rpm.xinetd \
+	rubygems.rb \
 	tgpg u_pkg.sh \
 	vcheck vpkg-provides.sh vpkg-provides2.sh
 
 pkglibbindir = @USRLIBRPM@/bin
-pkglibbin_SCRIPTS = abi-compliance-checker.pl api-sanity-autotest.pl
+pkglibbin_SCRIPTS = abi-compliance-checker.pl api-sanity-autotest.pl mgo
 pkglibhelperdir = @USRLIBRPM@/helpers
 pkglibhelper_SCRIPTS = ${HELPERS}
 pkglibqfdir = @USRLIBRPM@/qf
@@ -578,6 +590,8 @@ pkglibqf_DATA = \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = rpm.pc
+pkgincdir = $(includedir)
+pkginc_HEADERS = multiarch-dispatch.h
 all: all-am
 
 .SUFFIXES:
@@ -795,12 +809,78 @@ uninstall-pkglibqfDATA:
 	test -n "$$files" || exit 0; \
 	echo " ( cd '$(DESTDIR)$(pkglibqfdir)' && rm -f" $$files ")"; \
 	cd "$(DESTDIR)$(pkglibqfdir)" && rm -f $$files
+install-pkgincHEADERS: $(pkginc_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(pkgincdir)" || $(MKDIR_P) "$(DESTDIR)$(pkgincdir)"
+	@list='$(pkginc_HEADERS)'; test -n "$(pkgincdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(pkgincdir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(pkgincdir)" || exit $$?; \
+	done
+
+uninstall-pkgincHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkginc_HEADERS)'; test -n "$(pkgincdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$files" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(pkgincdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(pkgincdir)" && rm -f $$files
+
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '{ files[$$0] = 1; nonempty = 1; } \
+	      END { if (nonempty) { for (i in files) print i; }; }'`; \
+	mkid -fID $$unique
 tags: TAGS
-TAGS:
 
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	set x; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '{ files[$$0] = 1; nonempty = 1; } \
+	      END { if (nonempty) { for (i in files) print i; }; }'`; \
+	shift; \
+	if test -z "$(ETAGS_ARGS)$$*$$unique"; then :; else \
+	  test -n "$$unique" || unique=$$empty_fix; \
+	  if test $$# -gt 0; then \
+	    $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+	      "$$@" $$unique; \
+	  else \
+	    $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+	      $$unique; \
+	  fi; \
+	fi
 ctags: CTAGS
-CTAGS:
+CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '{ files[$$0] = 1; nonempty = 1; } \
+	      END { if (nonempty) { for (i in files) print i; }; }'`; \
+	test -z "$(CTAGS_ARGS)$$unique" \
+	  || $(CTAGS) $(CTAGSFLAGS) $(AM_CTAGSFLAGS) $(CTAGS_ARGS) \
+	     $$unique
 
+GTAGS:
+	here=`$(am__cd) $(top_builddir) && pwd` \
+	  && $(am__cd) $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) "$$here"
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
@@ -834,9 +914,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(SCRIPTS) $(DATA)
+all-am: Makefile $(SCRIPTS) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(pkglibbindir)" "$(DESTDIR)$(pkglibhelperdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkglibqfdir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(pkglibbindir)" "$(DESTDIR)$(pkglibhelperdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(pkglibqfdir)" "$(DESTDIR)$(pkgincdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -870,7 +950,7 @@ clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic
+distclean-am: clean-am distclean-generic distclean-tags
 
 dvi: dvi-am
 
@@ -884,8 +964,9 @@ info: info-am
 
 info-am:
 
-install-data-am: install-pkgconfigDATA install-pkglibbinSCRIPTS \
-	install-pkglibhelperSCRIPTS install-pkglibqfDATA
+install-data-am: install-pkgconfigDATA install-pkgincHEADERS \
+	install-pkglibbinSCRIPTS install-pkglibhelperSCRIPTS \
+	install-pkglibqfDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
@@ -932,27 +1013,30 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-binSCRIPTS uninstall-pkgconfigDATA \
-	uninstall-pkglibSCRIPTS uninstall-pkglibbinSCRIPTS \
-	uninstall-pkglibhelperSCRIPTS uninstall-pkglibqfDATA
+	uninstall-pkgincHEADERS uninstall-pkglibSCRIPTS \
+	uninstall-pkglibbinSCRIPTS uninstall-pkglibhelperSCRIPTS \
+	uninstall-pkglibqfDATA
 
 .MAKE: install-am install-data-am install-exec-am install-strip
 
-.PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	distclean distclean-generic distclean-libtool distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-binSCRIPTS install-data install-data-am \
-	install-data-hook install-dvi install-dvi-am install-exec \
-	install-exec-am install-exec-hook install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-pkgconfigDATA install-pkglibSCRIPTS \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
+	clean-libtool ctags distclean distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-binSCRIPTS \
+	install-data install-data-am install-data-hook install-dvi \
+	install-dvi-am install-exec install-exec-am install-exec-hook \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-pkgconfigDATA \
+	install-pkgincHEADERS install-pkglibSCRIPTS \
 	install-pkglibbinSCRIPTS install-pkglibhelperSCRIPTS \
 	install-pkglibqfDATA install-ps install-ps-am install-strip \
 	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am \
-	uninstall-binSCRIPTS uninstall-pkgconfigDATA \
-	uninstall-pkglibSCRIPTS uninstall-pkglibbinSCRIPTS \
-	uninstall-pkglibhelperSCRIPTS uninstall-pkglibqfDATA
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-binSCRIPTS uninstall-pkgconfigDATA \
+	uninstall-pkgincHEADERS uninstall-pkglibSCRIPTS \
+	uninstall-pkglibbinSCRIPTS uninstall-pkglibhelperSCRIPTS \
+	uninstall-pkglibqfDATA
 
 
 all:

@@ -110,7 +110,7 @@ lua =		$(abs_top_builddir)/lua/lua
 mtree =		$(abs_top_builddir)/tools/mtree
 ngsr =		$(abs_top_builddir)/js/ngsr
 rc =		$(abs_top_builddir)/tools/rc
-wget =		/usr/bin/wget
+wget =		/usr/bin/wget -nv
 
 sudo =		sudo
 
@@ -176,11 +176,11 @@ tecdsa_LDADD = $(RPMIO_LDADD)
 thkp_SOURCES = thkp.c
 thkp_LDADD = $(RPMIO_LDADD)
 
-tkey_SOURCES = genpgp.h tkey.c
+tkey_SOURCES = tkey.c
 tkey_LDADD = $(RPM_LDADD)
 tkey.c: genpgp.h
 
-tpgp_SOURCES = genpgp.h tpgp.c
+tpgp_SOURCES = tpgp.c
 tpgp_LDADD = $(RPM_LDADD)
 tpgp.c: genpgp.h
 genpgp.h: genpgp.sh
@@ -282,7 +282,7 @@ check-markup: $(POPTPKGS)
 	@${rpm} -qp --nosignature --qf '[%{*:yaml}\n]' popt*.rpm > tmp/popt.yaml
 	@diff -u {tmp,ref}/popt.yaml
 	@${rpm} -qp --nosignature --qf '[%{*:xml}\n]' popt*.rpm > tmp/popt.xml
-	@diff -u {tmp,ref}/popt.xml
+	@-diff -u {tmp,ref}/popt.xml
 
 .PHONY: check-rpmrepo
 check-rpmrepo: $(POPTPKGS)
@@ -454,9 +454,9 @@ CM_mirror =	http://ftp.caixamagica.pt
 CM12_uri =	$(CM_mirror)/12/oficial/i586/media/main/release/
 CM12_manifest =	$(testdir)/ref/cm12-bash.i586.manifest
 CM14_uri =	$(CM_mirror)/14/oficial/i586/media/main/release/
-CM14_manifest =	$(testdir)/ref/cm14-bash.i586.manifest
+CM14_manifest =	$(testdir)/ref/cm14-minimal.i586.manifest
 CM15_uri =	$(CM_mirror)/15/oficial/i586/media/main/release/
-#CM15_manifest =	$(testdir)/ref/cm15-minimal.manifest
+CM15_manifest =	$(testdir)/ref/cm15-medium.i586.manifest
 # CAOS -- cAos
 CAOS_mirror =	http://mirror.caoslinux.org
 CAOS2_uri =	$(CAOS_mirror)/cAos-2/core/i386/
@@ -480,14 +480,22 @@ IDMS_manifest =	$(testdir)/ref/idms-minimal.i586.manifest
 # XXX notyet
 #MYTHDORA_mirror = http://mirror.beww.org/mythdora
 #MYTHDORA1223 =	$(MYTHDORA_mirror)/12.23/i386/os/Packages/
+
+# MAG -- Mageia
+#MAG_mirror =	ftp://mirrors.us.kernel.org/mandriva/Mandrakelinux/official
+MAG2011_uri =	/home/i586-mageia-2011.0/i586/media/core/release/
+MAG2011_manifest = $(testdir)/ref/mag2011-medium.i586.manifest
+
 # MDV -- Mandriva
 MDV_mirror =	ftp://mirrors.us.kernel.org/mandriva/Mandrakelinux/official
 MDV2009_uri =	$(MDV_mirror)/2009.0/i586/media/main/release/
-MDV2009_manifest = $(testdir)/ref/Mandriva2009.0-bash.i586.manifest
+MDV2009_manifest = $(testdir)/ref/mdv2009-minimal.i586.manifest
 MDV2010_uri =	$(MDV_mirror)/2010.0/i586/media/main/release/
-MDV2010_manifest = $(testdir)/ref/Mandriva2010.0-bash.i586.manifest
+MDV2010_manifest = $(testdir)/ref/mdv2010-minimal.i586.manifest
 MDV20101_uri =	$(MDV_mirror)/2010.1/i586/media/main/release/
 MDV20101_manifest = $(testdir)/ref/Mandriva2010.1-bash.i586.manifest
+MDV2011_uri =	/home/i586-mandriva-mdv2011.0/i586/media/main/release/
+MDV2011_manifest = $(testdir)/ref/mdv2011-medium.i586.manifest
 # MEEGO -- MeeGo
 # XXX lt-find: rpmdav.c:1331: htmlParse: Assertion `he > h' failed.
 MEEGO_mirror =	http://repo.meego.com/MeeGo/builds/1.0.99/daily/
@@ -518,6 +526,8 @@ PLD3_uri =	$(PLD_mirror)/3.0/PLD/i486/RPMS/ \
 # RF -- RPM Forge
 # SL -- Scientific Linux
 SL_mirror =	http://ftp.scientificlinux.org/linux/scientific
+SL60_uri =	$(SL_mirror)/6.0/i386/os/Packages
+SL60_manifest = $(testdir)/ref/sl60-everything.manifest
 SL55_uri =	$(SL_mirror)/55/i386/SL/
 SL55_manifest = $(testdir)/ref/sl55-everything.manifest
 SL54_uri =	$(SL_mirror)/54/i386/SL/
@@ -538,6 +548,7 @@ TURBO12_uri =	$(TURBO_mirror)/ia32/Client/12/turbolinux/
 # UL -- Unity Linux
 UL_mirror =	http://distro.ibiblio.org/pub/linux/distributions/unity/repo
 UL_uri =	$(UL_mirror)/2009/x86_64/unity/
+UL_manifest =	$(testdir)/ref/ul2011-minimal.i586.manifest
 # XXX UL_manifest =	$(testdir)/ref/unity-minimal.x86_64.manifest
 # VINE -- Vine Linux
 VINE_mirror =	http://ring.u-toyama.ac.jp/pub/linux/Vine
@@ -559,7 +570,7 @@ DISTROS = \
 	CAOS2 CAOS3 \
 	C55 C54 C53 C52 C51 C50 \
 	IDMS \
-	MDV2009 MDV2010 \
+	MDV2009 MDV2010 MDV2011 MAG2011 \
 	MEEGO MOBLIN21 \
 	OJUBA4 \
 	OWL2 \
@@ -594,13 +605,34 @@ manifests:
 	  ls -l ${@D}/uri $@ ${@D}/distros.mongo; \
 	fi
 
+XXXIDMS =	/home/i586-idms-linux/RPMS/
+XXXCM15 =	/home/i586-caixa-cm15/ftp.caixamagica.pt/15/oficial/i586/
+XXXCM14 =	/home/i586-caixa-cm14/ftp.caixamagica.pt/14/oficial/i586/media/main/release/
+
+XXXMAG2011 =	/home/i586-mageia-2011.0/i586/media/core/release/
+XXXUL2011 =	/home/i586-unity-linux/repo/current/i586/
+XXXMDV2011 =	/home/i586-mandriva-mdv2011.0/i586/media/main/release/
+XXXMDV2010 =	/home/i586-mandriva-mdv2010.0/i586/media/main/release/
+XXXMDV2009 =	/home/i586-mandriva-mdv2009.0/i586/media/main/release/
+
+
 .PRECIOUS: %/RPMS
 %/RPMS: %/manifest
 	@echo "=== $@ ==="
 	@if [ ! -d $@ ]; then \
 	  mkdir -p $@; \
 	  echo "==> Download $@ ..."; \
-	  cd $@ && ${wget} -c -i $(testdir)/$(@D)/manifest; \
+	  case $(@D) in \
+	  IDMS)		$(cp) ${XXXIDMS}/* $@ ;; \
+	  CM15) $(cp) $$(cat $< | sed -e 's,^.*/\(media/[^/]*/release/[^/]*\)/,${XXXCM15}\1,') $@ ;; \
+	  CM14)	$(cp) $$(cat $< | sed -e 's,^.*/,${XXXCM14}/,') $@ ;; \
+	  MAG2011) $(cp) $$(cat $< | sed -e 's,^.*/,${XXXMAG2011},') $@ ;; \
+	  UL) $(cp) $$(cat $< | sed -e 's,^.*/\([^/]*\)/,${XXXUL2011}/\1/,') $@ ;; \
+	  MDV2011)	$(cp) $$(cat $<) $@ ;; \
+	  MDV2010) $(cp) $$(cat $< | sed -e 's,^.*/,${XXXMDV2010}/,') $@ ;; \
+	  MDV2009) $(cp) $$(cat $< | sed -e 's,^.*/,${XXXMDV2009}/,') $@ ;; \
+	  *)		cd $@ && ${wget} -c -i $(testdir)/$(@D)/manifest ;; \
+	  esac; \
 	fi
 
 .PRECIOUS: %/todo
@@ -680,53 +712,62 @@ Install-%: %/solve
 	@rm -f $(<D)/install
 	@echo "`$(now)` ==> ${<D}: Installing ..." | tee -a $(<D)/install
 	@${sudo} rm -rf $(<D)/ROOT
+	@cat -n $(<D)/todo | sort -R | cut -f2- > $(<D)/todo.random
 	@mkdir -p $(<D)/ROOT/var/lib/rpm/log $(<D)/ROOT/var/lib/rpm/tmp
 	@${cp} $(testdir)/ref/DB_CONFIG $(<D)/ROOT/var/lib/rpm
-	-mkdir -p $(<D)/ROOT/proc $(<D)/ROOT/sys
-	-sudo mount -o bind /proc $(<D)/ROOT/proc
-#	-sudo mount -o bind /sys $(<D)/ROOT/sys 
-	-mkdir -p $(<D)/ROOT/dev/pts
-#	-sudo mount -o bind /dev $(<D)/ROOT/dev
-#	-sudo mount -o bind /dev/pts $(<D)/ROOT/dev/pts
-	@-${sudo} ${rpm} -Uvh --nofdigests --stats \
+	@-mkdir -p $(<D)/ROOT/proc && sudo mount -o bind /proc $(<D)/ROOT/proc
+#	@-mkdir -p $(<D)/ROOT/sys  && sudo mount -o bind /sys $(<D)/ROOT/sys 
+#	@-mkdir -p $(<D)/ROOT/dev/pts
+#	@-sudo mount -o bind /dev $(<D)/ROOT/dev
+#	@-sudo mount -o bind /dev/pts $(<D)/ROOT/dev/pts
+	@-${sudo} ${rpm} -Uvh --stats --nofdigests \
 	  -r $(testdir)/$(<D)/ROOT \
+	  -D '__dbi_txn create nofsync lock log mpool txn auto_commit thread thread_count=64' \
 	  -D '_dbpath /var/lib/rpm' \
 	  -D '_hrmib_path /var/cache/hrmib/%{___NVRA}' \
 	  -D '_solve_A $(<D)/solve' \
 	  --noparentdirs --nolinktos --nosignature \
-	  $(<D)/todo 2>&1 | tee -a $(<D)/install
-#	-sudo umount $(<D)/ROOT/dev/pts
-#	-sudo umount $(<D)/ROOT/dev
-#	-sudo umount $(<D)/ROOT/sys 
-	-sudo umount $(<D)/ROOT/proc
-	@echo "`$(now)` <== ${<D}: Installed." | tee -a $(<D)/install
-	@-./spew ${<D} > ${<D}/install.mongo
+	  $(<D)/todo.random 2>&1 | tee -a $(<D)/install
+	-${sudo} ${rpm} -Va --nofiles --noaid --stats \
+	  -D '_dbpath $(testdir)/$(<D)/ROOT/var/lib/rpm' \
+	  --noparentdirs --nolinktos --nosignature \
+	  2>&1 | tee -a $(<D)/install
+#	@-sudo umount $(<D)/ROOT/dev/pts
+#	@-sudo umount $(<D)/ROOT/dev
+#	@-sudo umount $(<D)/ROOT/sys 
+	@-sudo umount $(<D)/ROOT/proc
+#	@rm -f $(<D)/todo.random
+	@echo "`$(now)` <== $(<D): Installed." | tee -a $(<D)/install
+	@-./spew $(<D) > $(<D)/install.mongo
 #	@-${mongo} ${mongoserver} < ${<D}/install.mongo
 
 Verify-%: %/solve
 	@echo "=== $@ ==="
-	@${sudo} rm -rf $(<D)/ROOT
-	@mkdir -p $(<D)/ROOT/var/lib/rpm/log $(<D)/ROOT/var/lib/rpm/tmp
-	@${cp} $(testdir)/ref/DB_CONFIG $(<D)/ROOT/var/lib/rpm
-	@rm -f $(<D)/verify
+	rm -f $(<D)/verify
 	@echo "`$(now)` ==> ${<D}: Verifying ..." | tee -a $(<D)/verify
 	@-for F in `cat $(<D)/todo`; do \
+	  ${sudo} rm -rf $(<D)/VROOT; \
+	  mkdir -p $(<D)/VROOT/var/lib/rpm/log $(<D)/VROOT/var/lib/rpm/tmp; \
+	  ${cp} $(testdir)/ref/DB_CONFIG $(<D)/VROOT/var/lib/rpm; \
 	  echo "-----> " $$F; \
-	  ${rpm} -U --justdb --stats \
-	    -D '_dbpath $(testdir)/$(<D)/ROOT/var/lib/rpm' \
-	    -D "_solve_A $(<D)/solve" \
-	    --noscripts --notriggers --noparentdirs --nolinktos --nosignature \
+	  ${sudo} ${rpm} -Uv --nofdigests --stats \
+	    -r $(testdir)/$(<D)/VROOT \
+	    -D '_dbpath /var/lib/rpm' \
+	    -D '_hrmib_path /var/cache/hrmib/%{___NVRA}' \
+	    -D "_solve_A $(testdir)/$(<D)/solve" \
+	    --noparentdirs --nolinktos --nosignature \
 	    $$F \
 	  2>&1 || : ; \
-	  ${rpm} -Va --nofiles --noaid \
-	    -D '_dbpath $(testdir)/$(<D)/ROOT/var/lib/rpm' \
-	    --noparentdirs --nolinktos \
+	  ${rpm} -Va --nofiles --noaid --stats \
+	    -D '_dbpath $(testdir)/$(<D)/VROOT/var/lib/rpm' \
+	    --noparentdirs --nolinktos --nosignature \
 	  2>&1 || : ; \
-	  ${rpm} -e --justdb \
-	    -D '_dbpath $(testdir)/$(<D)/ROOT/var/lib/rpm' \
+	  ${sudo} ${rpm} -e --stats \
+	    -r $(testdir)/$(<D)/VROOT \
+	    -D '_dbpath /var/lib/rpm' \
+	    -D '_hrmib_path /var/cache/hrmib/%{___NVRA}' \
 	    -D '_repackage_all_erasures 0' \
-	    --nodeps --noscripts --notriggers \
-	    `${rpm} -D '_dbpath $(testdir)/$(<D)/ROOT/var/lib/rpm' -qa` \
+	    `${rpm} -D '_dbpath $(testdir)/$(<D)/VROOT/var/lib/rpm' -qa` \
 	  2>&1 || : ; \
 	done | tee -a $(<D)/verify
 	@echo "`$(now)` <== ${<D}: Verified." | tee -a $(<D)/verify
@@ -885,6 +926,6 @@ check-local: check-init
 
 clean-local:
 	rm -f genpgp.h genssl.h
-	$(sudo) rm -rf */ROOT tmp/repackage
+	$(sudo) rm -rf */ROOT tmp/repackage tmp/solve*
 	rm -rf tmp $(BUILD_DIRS)
 	rm -rf repodata/

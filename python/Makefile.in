@@ -300,10 +300,6 @@ WITH_GPSEE_CPPFLAGS = @WITH_GPSEE_CPPFLAGS@
 WITH_GPSEE_LDFLAGS = @WITH_GPSEE_LDFLAGS@
 WITH_GPSEE_LIBS = @WITH_GPSEE_LIBS@
 WITH_GPSEE_SUBDIR = @WITH_GPSEE_SUBDIR@
-WITH_JS = @WITH_JS@
-WITH_JS_CPPFLAGS = @WITH_JS_CPPFLAGS@
-WITH_JS_LDFLAGS = @WITH_JS_LDFLAGS@
-WITH_JS_LIBS = @WITH_JS_LIBS@
 WITH_JS_SUBDIR = @WITH_JS_SUBDIR@
 WITH_KEYUTILS = @WITH_KEYUTILS@
 WITH_KEYUTILS_RPMKEY = @WITH_KEYUTILS_RPMKEY@
@@ -316,6 +312,11 @@ WITH_LUA_LIBS = @WITH_LUA_LIBS@
 WITH_LUA_SUBDIR = @WITH_LUA_SUBDIR@
 WITH_LUA_SUBDIR_DEF = @WITH_LUA_SUBDIR_DEF@
 WITH_LUA_SUBDIR_LIB = @WITH_LUA_SUBDIR_LIB@
+WITH_MOZJS185 = @WITH_MOZJS185@
+WITH_MOZJS185_CPPFLAGS = @WITH_MOZJS185_CPPFLAGS@
+WITH_MOZJS185_LDFLAGS = @WITH_MOZJS185_LDFLAGS@
+WITH_MOZJS185_LIBS = @WITH_MOZJS185_LIBS@
+WITH_MOZJS185_SUBDIR = @WITH_MOZJS185_SUBDIR@
 WITH_NEON = @WITH_NEON@
 WITH_NEON_CPPFLAGS = @WITH_NEON_CPPFLAGS@
 WITH_NEON_LDFLAGS = @WITH_NEON_LDFLAGS@
@@ -425,6 +426,7 @@ __FILE = @__FILE@
 __GIT = @__GIT@
 __GPG = @__GPG@
 __GSR = @__GSR@
+__GST_INSPECT = @__GST_INSPECT@
 __GZIP = @__GZIP@
 __HG = @__HG@
 __ID = @__ID@
@@ -439,6 +441,7 @@ __LZOP = @__LZOP@
 __MAKE = @__MAKE@
 __MKDIR = @__MKDIR@
 __MKDIR_P = @__MKDIR_P@
+__MODINFO = @__MODINFO@
 __MONGO = @__MONGO@
 __MV = @__MV@
 __NM = @__NM@
@@ -570,7 +573,8 @@ _rpmmodule_la_LIBADD = \
 	$(top_builddir)/rpmdb/librpmdb.la \
 	$(top_builddir)/rpmio/librpmio.la \
 	$(top_builddir)/misc/librpmmisc.la \
-	@LTLIBINTL@
+	@LTLIBINTL@ \
+	-lpython$(PYTHON_VERSION)
 
 _rpmmodule_la_SOURCES = \
 	rpmmodule.c header-py.c \
@@ -1064,8 +1068,8 @@ lint:
 
 # FIXME: using .libs/ is not really correct, but whatever
 check-local:
-#	@export PYTHONPATH=$(PYTHONPATH):$(shell pwd):$(shell pwd)/.libs/ && \
-#	cd test && python test_rpm.py
+	@export PYTHONPATH=$(PYTHONPATH):$(shell pwd):$(shell pwd)/.libs/ && \
+	cd test && python test_rpm.py
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -899,7 +899,7 @@ static int db_init(dbiIndex dbi, const char * dbhome,
     }
 
 /* ==== Locking: */
-#define	_RPMDB_NLOCKS	8192
+#define	_RPMDB_NLOCKS	16384
     if (eflags & DB_INIT_LOCK) {
 	uint32_t _lk_max_lockers = _RPMDB_NLOCKS;
 	uint32_t _lk_max_locks = _RPMDB_NLOCKS;
@@ -920,6 +920,19 @@ static int db_init(dbiIndex dbi, const char * dbhome,
     }
 
 /* ==== Logging: */
+    const char *logdir;
+
+    logdir = rpmGetPath(dbhome, "/", "log", NULL);
+    /*
+     * Create the /var/lib/rpm/log directory if it doesn't exist (root only).
+     */
+    rpmioMkpath(logdir, 0755, getuid(), getgid());
+
+    xx = dbenv->set_lg_dir(dbenv, logdir);
+    xx = cvtdberr(dbi, "dbenv->set_lg_dir", xx, _debug);
+
+    _free(logdir);
+
 /* ==== Memory pool: */
     if (eflags & DB_INIT_MPOOL) {
 	uint32_t _lo =  16 * 1024 * 1024;
@@ -1904,11 +1917,13 @@ _ifill:
 	    if (ns > 0)			/* No "" empty keys please. */
 		xx = loadDBT(_r, he->tag, s, ns);
 	} else {
-	    static double e = 1.0e-4;
+	    static double e = 1.0e-5;
+	    static size_t nmin = 16;
+	    size_t n = 2 * (he->c > nmin ? he->c : nmin);
 	    size_t m = 0;
 	    size_t k = 0;
 	    rpmbf bf;
-	    rpmbfParams(he->c, e, &m, &k);
+	    rpmbfParams(n, e, &m, &k);
 	    bf = rpmbfNew(m, k, 0);
 
 	    _r->flags = DB_DBT_MULTIPLE | DB_DBT_APPMALLOC;

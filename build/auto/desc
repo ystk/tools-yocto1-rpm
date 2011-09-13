@@ -1,5 +1,5 @@
 <version>
-  5.4.0
+  5.4.1
 </version>
  
 <headers>
@@ -9,18 +9,18 @@
 </headers>
  
 <libs>
-  /X/src/wdj54/build/.libs/librpmbuild.so
+  /wdj54/build/.libs/librpmbuild.so
 </libs>
 
 <include_paths>
-  /X/src/wdj54/build
-  /X/src/wdj54/lib
-  /X/src/wdj54/rpmdb
-  /X/src/wdj54/rpmio
+  /wdj54/build
+  /wdj54/lib
+  /wdj54/rpmdb
+  /wdj54/rpmio
 </include_paths>
 
 <gcc_options>
-  -g -O2 -fPIC -DPIC -Wall -W -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wno-char-subscripts -Wno-unused-parameter -Wformat-security -g3 -fno-delete-null-pointer-checks -D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions -fexceptions -Wno-missing-field-initializers -D_GNU_SOURCE -D_REENTRANT        
+  -O2 -g -frecord-gcc-switches -Wstrict-aliasing=2 -pipe -Wformat -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fPIC -DPIC -Wall -W -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wno-char-subscripts -Wno-unused-parameter -Wformat-security -g3 -fno-delete-null-pointer-checks -D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions -fexceptions -Wno-missing-field-initializers -D_GNU_SOURCE -D_REENTRANT                    
 </gcc_options>
 
 <opaque_types>
@@ -41,10 +41,10 @@
 </include_preamble>
 
 <libs_depend>
-  /X/src/wdj54/lib/.libs/librpm.so
-  /X/src/wdj54/rpmdb/.libs/librpmdb.so
-  /X/src/wdj54/rpmio/.libs/librpmio.so
-  /X/src/wdj54/misc/.libs/librpmmisc.so
+  /wdj54/lib/.libs/librpm.so
+  /wdj54/rpmdb/.libs/librpmdb.so
+  /wdj54/rpmio/.libs/librpmio.so
+  /wdj54/misc/.libs/librpmmisc.so
 </libs_depend>
 
 <opaque_types>
