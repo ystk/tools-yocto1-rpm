@@ -1,0 +1,155 @@
+<version>
+  5.4.0
+</version>
+ 
+<headers>
+<!-- arirang.h -->
+<!-- blake.h -->
+<!-- bmw.h -->
+<!-- chi.h -->
+<!-- cubehash.h -->
+<!-- echo.h -->
+<!-- edon-r.h -->
+<!-- fugue.h -->
+<!-- groestl.h -->
+<!-- hamsi.h -->
+<!-- jh.h -->
+<!-- keccak.h -->
+<!-- lane.h -->
+<!-- luffa.h -->
+<!-- md2.h -->
+<!-- md6.h -->
+<!-- salsa10.h -->
+<!-- salsa20.h -->
+<!-- shabal.h -->
+<!-- shavite3.h -->
+<!-- simd.h -->
+<!-- skein.h -->
+<!-- tib3.h -->
+<!-- tiger.h -->
+
+  iosm.h
+  ar.h
+  cpio.h
+  tar.h
+
+<!-- bson.h FIXME: bson_malloc gets used. -->
+<!-- mongo.h -->
+
+  argv.h
+  crc.h
+<!-- envvar.h -->
+<!-- fnmatch.h -->
+  fts.h
+<!-- glob.h -->
+<!-- html-parse.h -->
+<!-- mire.h FIXME! -->
+<!-- poptIO.h -->
+  rpmacl.h
+<!-- rpmasn.h -->
+  rpmaug.h
+<!-- rpmbag.h -->
+  rpmbc.h
+  rpmbf.h
+  rpmbz.h
+  rpmcb.h
+
+<!-- rpmcdsa.h -->
+<!-- rpmcpio.h -->
+<!-- rpmcudf.h -->
+  rpmcvs.h
+<!-- rpmdav.h -->
+  rpmdir.h
+  rpmficl.h
+  rpmgc.h
+  rpmgit.h
+  rpmhash.h
+  rpmhkp.h
+<!-- rpmhook.h -->
+  rpmio.h
+<!-- rpmio_internal.h -->
+  rpmiotypes.h
+  rpmjs.h
+<!-- rpmjsio.h DELETE -->
+<!-- rpmkeyring.h -->
+<!-- rpmku.h	FIXME: 1 -->
+  rpmlog.h
+  rpmltc.h
+  rpmlua.h
+  rpmmacro.h
+  rpmmg.h
+<!-- rpmnix.h -->
+  rpmnss.h
+  rpmperl.h
+  rpmpgp.h
+  rpmpython.h
+<!-- rpmruby.h	FIXME: missing file exception -->
+  rpmsm.h
+  rpmsp.h
+<!-- rpmsq.h	FIXME: logout from stdin sighup?-->
+  rpmsql.h
+  rpmsquirrel.h
+  rpmssl.h
+  rpmsvn.h
+  rpmsw.h
+<!-- rpmsx.h -->
+  rpmsyck.h
+<!-- rpmtar.h -->
+  rpmtcl.h
+<!-- rpmtpm.h -->
+  rpmurl.h
+  rpmuuid.h
+<!-- rpmxar.h -->
+<!-- rpmz.h -->
+  rpmzlog.h
+<!-- rpmzq.h -->
+  ugid.h
+  yarn.h
+</headers>
+ 
+<libs>
+  /X/src/wdj54/rpmio/.libs/librpmio.so
+</libs>
+
+<include_paths>
+  /X/src/wdj54/rpmio
+</include_paths>
+
+<add_include_paths>
+</add_include_paths>
+
+<gcc_options>
+  -g -O2 -fPIC -DPIC -Wall -W -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wno-char-subscripts -Wno-unused-parameter -Wformat-security -g3 -fno-delete-null-pointer-checks -D_FORTIFY_SOURCE=2 -fstack-protector -fexceptions -fexceptions -Wno-missing-field-initializers -D_GNU_SOURCE -D_REENTRANT        
+</gcc_options>
+
+<include_preamble>
+  stdint.h
+  stdio.h
+  stdlib.h
+  string.h
+</include_preamble>
+
+<libs_depend>
+  /X/src/wdj54/misc/.libs/librpmmisc.so
+</libs_depend>
+
+<opaque_types>
+</opaque_types>
+
+<skip_interfaces>
+</skip_interfaces>
+
+<skip_headers>
+</skip_headers>
+
+<skip_libs>
+</skip_libs>
+
+<libgroup>
+</libgroup>
+
+<out_params>
+</out_params>
+
+<skip_warnings>
+</skip_warnings>
